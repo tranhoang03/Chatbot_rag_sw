@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực tự động - RAG Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        .video-container {
+            position: relative;
+            width: 320px;
+            height: 240px;
+            margin: 15px auto;
+        }
+        #video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transform: scaleX(-1);
+        }
+        #video {
+            display: block;
+            border: 1px solid #444;
+        }
+        .countdown {
+            font-size: 1.5rem;
+            color: #facc15;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body class="auth-body">
+    <div class="auth-container">
+        <h1>🤖</h1>
+        <h3>👤 Đang xác thực tự động...</h3>
+        <div class="countdown" id="countdown">5</div>
+        <div class="video-container">
+            <video id="video" width="320" height="240" autoplay playsinline></video>
+            <canvas id="video-overlay" width="320" height="240"></canvas>
+        </div>
+        <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+        <p id="status">Đang khởi tạo camera...</p>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const captureCanvas = document.getElementById('canvas');
+        const captureContext = captureCanvas.getContext('2d');
+        const overlayCanvas = document.getElementById('video-overlay');
+        const overlayContext = overlayCanvas.getContext('2d');
+        const statusElement = document.getElementById('status');
+        const countdownElement = document.getElementById('countdown');
+        let stream = null;
+        let frameInterval = null;
+        let countdown = 5;
+        let authSuccess = false;
+
+        const socket = io();
+
+        socket.on('connect', () => {
+            console.log('Connected', socket.id);
+            statusElement.textContent = 'Đã kết nối, khởi tạo camera...';
+            startCamera();
+            startCountdown();
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from Socket.IO server');
+            statusElement.textContent = 'Mất kết nối. Vui lòng tải lại trang.';
+            stopCameraAndProcessing();
+            clearOverlay();
+        });
+
+        socket.on('connect_error', (err) => {
+            console.error('Socket.IO connection error:', err);
+            statusElement.textContent = 'Lỗi kết nối tới server. Vui lòng thử lại.';
+            stopCameraAndProcessing();
+            clearOverlay();
+        });
+
+        socket.on('auth_result', (data) => {
+            console.log('Auth result:', data);
+            clearOverlay();
+
+            if (data.bbox && data.bbox.length === 4) {
+                drawBoundingBox(data.bbox, data.confidence, data.success);
+            }
+
+            if (data.success) {
+                authSuccess = true;
+                statusElement.textContent = `Xác thực thành công! Chào ${data.user_info.name}! Đang xác nhận...`;
+                confirmAuthentication(data.user_info);
+            } else {
+                if (data.message) {
+                    statusElement.textContent = data.message;
+                }
+            }
+        });
+
+        function startCountdown() {
+            const timer = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    if (!authSuccess) {
+                        window.location.href = "{{ url_for('start_anonymous_chat') }}";
+                    }
+                }
+            }, 1000);
+        }
+
+        function drawBoundingBox(bbox, confidence, isSuccess) {
+            overlayContext.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+            overlayContext.strokeStyle = isSuccess ? '#00FF00' : '#FFCC00';
+            overlayContext.lineWidth = 2;
+            overlayContext.font = '14px Arial';
+            overlayContext.fillStyle = overlayContext.strokeStyle;
+
+            const [x1, y1, x2, y2] = bbox;
+            overlayContext.strokeRect(x1, y1, x2 - x1, y2 - y1);
+
+            if (confidence !== null && confidence !== undefined) {
+                const confText = `Conf: ${confidence.toFixed(2)}`;
+                const textY = y1 > 20 ? y1 - 5 : y1 + 15;
+
+                overlayContext.save();
+                overlayContext.translate(overlayCanvas.width, 0);
+                overlayContext.scale(-1, 1);
+                overlayContext.fillStyle = isSuccess ? '#00FF00' : '#FFCC00';
+                overlayContext.textAlign = 'left';
+                const unFlippedTextX = overlayCanvas.width - x2;
+                overlayContext.fillText(confText, unFlippedTextX, textY);
+                overlayContext.restore();
+            }
+        }
+
+        function clearOverlay() {
+            overlayContext.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        }
+
+        async function confirmAuthentication(userInfo) {
+            try {
+                const response = await fetch('/confirm_auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_info: userInfo })
+                });
+                const result = await response.json();
+                if (response.ok && result.status === 'ok') {
+                    console.log('Session confirmed by server.');
+                    statusElement.textContent = 'Phiên đã xác nhận. Đang chuyển hướng...';
+                    stopCameraAndProcessing();
+                    clearOverlay();
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    console.error('Failed to confirm auth:', result.message);
+                    statusElement.textContent = `Lỗi xác nhận phiên: ${result.message || 'Unknown error'}.`;
+                }
+            } catch (error) {
+                console.error('Error confirming auth:', error);
+                statusElement.textContent = 'Lỗi kết nối khi xác nhận phiên.';
+            }
+        }
+
+        async function startCamera() {
+            if (stream) return;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { frameRate: { ideal: 10 } }, audio: false });
+                video.srcObject = stream;
+                statusElement.textContent = 'Đang chờ nhận diện...';
+                startSendingFrames();
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                statusElement.textContent = 'Lỗi: Không thể truy cập camera.';
+                stopCameraAndProcessing();
+            }
+        }
+
+        function startSendingFrames() {
+            if (frameInterval) clearInterval(frameInterval);
+            frameInterval = setInterval(() => {
+                if (!stream || !video.readyState >= video.HAVE_ENOUGH_DATA || !socket.connected) return;
+                try {
+                    captureContext.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
+                    const imageDataUrl = captureCanvas.toDataURL('image/jpeg', 0.7);
+                    socket.emit('video_frame', { image: imageDataUrl });
+                } catch (error) {
+                    console.error("Error capturing/sending frame:", error);
+                }
+            }, 500);
+        }
+
+        function stopCameraAndProcessing() {
+            console.log("Stopping camera and frame sending.");
+            if (frameInterval) {
+                clearInterval(frameInterval);
+                frameInterval = null;
+            }
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+                video.srcObject = null;
+            }
+        }
+
+        window.addEventListener('beforeunload', stopCameraAndProcessing);
+    </script>
+</body>
+</html> 
