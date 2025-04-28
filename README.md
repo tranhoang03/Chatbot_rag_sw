@@ -129,7 +129,7 @@ Mọi đóng góp và đề xuất cải tiến đều được hoan nghênh!
 
 [Thêm thông tin giấy phép tại đây]
 
-## 🙏 Cảm Ơn
+## Tham khảo
 
 - InsightFace cho nhận dạng khuôn mặt
 - Google cho khả năng Generative AI
