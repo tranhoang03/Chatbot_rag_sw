@@ -8,7 +8,7 @@ import os
 from flask import Flask, render_template, request, session, jsonify, redirect, url_for
 from flask_socketio import SocketIO, emit, join_room, leave_room 
 from system.rag_system import OptimizedRAGSystem
-from models.face_auth import FaceAuthTransformer
+from system.face_auth import FaceAuthTransformer
 from config import Config
 import os
 from dotenv import load_dotenv
