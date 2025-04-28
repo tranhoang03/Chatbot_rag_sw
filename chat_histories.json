@@ -43,5 +43,12 @@
       "query": "tôi đang băn khoăn không biết đồ uống bạn gợi ý này hạng thứ bao nhiêu nhỉ",
       "response": "Chào anh Son Heung-min!  Shaken Iced Tazo Tea Lemonade rất được khách hàng yêu thích đấy ạ!  Tuy nhiên, em không có thông tin xếp hạng cụ thể của sản phẩm này trong hệ thống.  Em xin lỗi vì sự bất tiện này!"
     }
+  ],
+  "71": [
+    {
+      "timestamp": "2025-04-28T09:06:53.172052",
+      "query": "tôi khát",
+      "response": "Anh đang khát nước đúng không ạ?  Vậy thì em gợi ý vài lựa chọn nhé:\n\n1. *Cà phê đen*:  Nếu anh muốn một thức uống đậm đà, giúp tỉnh táo.\n2. *Trà ủ lạnh chanh*:  Món này sẽ rất giải khát, vị chua ngọt dễ chịu, đặc biệt phù hợp với ngày hè nóng bức.\n3. *Trà Tazo Chai Latte*:  Nếu anh thích một thức uống ấm áp, thơm nhẹ nhàng, vị ngọt dịu.\n\n\nAnh từng mua *Java Chip Frappuccino Soymilk* và *Brewed Coffee Venti*,  nhưng đánh giá có vẻ không cao lắm.  Anh có muốn thử những loại khác không ạ?  Hay anh muốn cho em biết thêm sở thích để em tư vấn chính xác hơn?"
+    }
   ]
 }
