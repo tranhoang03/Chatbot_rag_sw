@@ -22,6 +22,40 @@ class HybridSearchResult:
         """Tính cosine similarity giữa hai vector"""
         return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
+    def _normalize_text_scores(self, text_results: List[Dict[str, Any]]) -> Dict[str, float]:
+        """Chuẩn hóa điểm tìm kiếm văn bản thành xác suất"""
+        if not text_results:
+            return {}
+            
+        # Lấy điểm từ kết quả
+        scores = {res['product_id']: res['score'] for res in text_results}
+        
+        # Chuyển đổi điểm thành xác suất bằng softmax
+        values = np.array(list(scores.values()))
+        exp_values = np.exp(values - np.max(values))  # Tránh overflow
+        probs = exp_values / exp_values.sum()
+        
+        return {pid: float(prob) for pid, prob in zip(scores.keys(), probs)}
+
+    def _normalize_image_scores(self, image_results: List[Tuple[Dict[str, Any], float]]) -> Dict[str, float]:
+        """Chuẩn hóa khoảng cách ảnh thành xác suất"""
+        if not image_results:
+            return {}
+            
+        # Lấy khoảng cách từ kết quả
+        distances = {meta['product_id']: dist for meta, dist in image_results}
+        
+        # Chuyển khoảng cách thành similarity
+        # Sử dụng exponential decay để chuyển khoảng cách thành similarity
+        max_dist = max(distances.values())
+        similarities = {pid: np.exp(-dist/max_dist) for pid, dist in distances.items()}
+        
+        # Chuẩn hóa thành xác suất
+        sum_sim = sum(similarities.values())
+        probs = {pid: sim/sum_sim for pid, sim in similarities.items()}
+        
+        return probs
+
     def search_by_image_features(self, image_path: str, k: int = 5) -> List[Tuple[Dict[str, Any], float]]:
         """Tìm kiếm sản phẩm dựa trên đặc trưng ảnh"""
         try:
@@ -44,7 +78,7 @@ class HybridSearchResult:
                             image_results: List[Tuple[Dict[str, Any], float]],
                             alpha: float = 0.5,
                             k: int = 3) -> List[Dict[str, Any]]:
-        print("\n=== Kết hợp kết quả theo Minimum Bayes Risk với Cosine Similarity ===")
+        print("\n=== Kết hợp kết quả theo Minimum Bayes Risk với xác suất chuẩn hóa ===")
 
         # Xử lý các trường hợp không có kết quả
         if not text_results and not image_results:
@@ -59,7 +93,14 @@ class HybridSearchResult:
             print("Chỉ có kết quả từ tìm kiếm văn bản")
             return text_results[:k]
 
-        # Tiếp tục xử lý khi có kết quả từ cả hai phương pháp
+        # Chuẩn hóa điểm thành xác suất
+        print("\n=== Thông tin chuẩn hóa ===")
+        text_probs = self._normalize_text_scores(text_results)
+        image_probs = self._normalize_image_scores(image_results)
+        print("Xác suất văn bản:", text_probs)
+        print("Xác suất ảnh:", image_probs)
+
+        # Tạo danh sách ứng viên
         candidates = {}
         for res in text_results:
             candidates[res['product_id']] = res
@@ -67,55 +108,26 @@ class HybridSearchResult:
             if meta['product_id'] not in candidates:
                 candidates[meta['product_id']] = meta
 
-        # 2. Tạo vector embedding cho các mô tả
-        descriptions = {meta['product_id']: meta['description'] for meta in candidates.values()}
-        description_vectors = {}
-        for pid, desc in descriptions.items():
-            vector = self.embeddings.embed_query(desc)
-            description_vectors[pid] = np.array(vector)
-
-        # 3. Chuẩn hóa score FAISS
-        def normalize_faiss(scores, is_distance=False):
-            values = list(scores.values())
-            if is_distance:
-                max_val = max(values)
-                min_val = min(values)
-                return {k: 1.0 - ((v - min_val) / (max_val - min_val + 1e-6)) for k, v in scores.items()}
-            else:
-                max_val = max(values)
-                min_val = min(values)
-                return {k: (v - min_val) / (max_val - min_val + 1e-6) for k, v in scores.items()}
-
-        text_scores = {res['product_id']: res['score'] for res in text_results}
-        image_scores = {meta['product_id']: dist for meta, dist in image_results}
-
-        text_scores = normalize_faiss(text_scores)
-        image_scores = normalize_faiss(image_scores, is_distance=True)
-        print("Score sau chuẩn hóa: ", text_scores, image_scores)
-
-        # 4. Tính tổng rủi ro kỳ vọng cho từng ứng viên
+        # Tính rủi ro kỳ vọng cho từng ứng viên
         risks = []
         for candidate_id in candidates:
-            vec_c = description_vectors[candidate_id]
+            # Lấy xác suất từ hai phương pháp
+            text_prob = text_probs.get(candidate_id, 0.0)
+            image_prob = image_probs.get(candidate_id, 0.0)
+            
+            # Tính rủi ro kỳ vọng
+            risk = alpha * (1 - image_prob) + (1 - alpha) * (1 - text_prob)
+            risks.append((candidate_id, risk))
 
-            # Risk theo text
-            risk_text = 0
-            for tid, score in text_scores.items():
-                sim = self._cosine_similarity(vec_c, description_vectors[tid])
-                risk_text += score * (1 - sim)  # Chuyển similarity thành distance
+        print("\n=== Thông tin rủi ro ===")
+        for candidate_id, risk in risks:
+            print(f"Candidate {candidate_id}:")
+            print(f"  Text prob: {text_probs.get(candidate_id, 0.0):.4f}")
+            print(f"  Image prob: {image_probs.get(candidate_id, 0.0):.4f}")
+            print(f"  Total risk: {risk:.4f}")
 
-            # Risk theo image
-            risk_image = 0
-            for iid, score in image_scores.items():
-                sim = self._cosine_similarity(vec_c, description_vectors[iid])
-                risk_image += score * (1 - sim)  # Chuyển similarity thành distance
-
-            total_risk = alpha * risk_image + (1 - alpha) * risk_text
-            risks.append((candidate_id, total_risk))
-
-        print('Tổng rủi ro: ', risks)
-        # 5. Chọn k ứng viên có rủi ro thấp nhất
-        risks = sorted(risks, key=lambda x: x[1])
+        # Sắp xếp theo rủi ro thấp nhất
+        risks.sort(key=lambda x: x[1])
         top_candidates = [candidates[r[0]] for r in risks[:k]]
 
         print("\n=== Top kết quả sau khi áp dụng MBR ===")
