@@ -37,7 +37,7 @@ buffalo_l/
 
 # Logs
 *.log
-
+*.onnx
 # Local development
 .DS_Store
 Thumbs.db 
