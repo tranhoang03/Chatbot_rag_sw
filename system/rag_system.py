@@ -201,6 +201,11 @@ class OptimizedRAGSystem:
                     col_type = col[2]
                     is_pk = col[5] == 1  # Check if column is primary key
                     pk_info = " (PRIMARY KEY)" if is_pk else ""
+                    
+                    # Bỏ qua cột embedding trong bảng Customers
+                    if table_name == "customers" and col_name == "embedding":
+                        continue
+                        
                     column_info.append(f"{col_name} ({col_type}){pk_info}")
                 
                 # Format foreign key information
