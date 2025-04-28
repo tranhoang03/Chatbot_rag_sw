@@ -123,13 +123,15 @@ project/
 
 ## 🤝 Đóng Góp
 
-Mọi đóng góp và đề xuất cải tiến đều được hoan nghênh!
+Mọi đóng góp và đề xuất cải tiến xin liên hệ
+- <a href="tranhoang0320@gmail.com">tranhoang0320@gmail.com</a>
+- <a href="trth.thanhue@gmail.com">trth.thanhue@gmail.com.com</a>
 
 ## 📄 Giấy Phép
 
 [Thêm thông tin giấy phép tại đây]
 
-## 🙏 Cảm Ơn
+## Tham khảo
 
 - InsightFace cho nhận dạng khuôn mặt
 - Google cho khả năng Generative AI
