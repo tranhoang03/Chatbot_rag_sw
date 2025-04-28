@@ -75,7 +75,7 @@ class FaceAuthTransformer:
 
     def recognize_face(self, frame):
         """Detect and recognize face in a single frame."""
-        result = {'match': None, 'bbox': None, 'confidence': None}
+        result = {'match': None, 'bbox': None, 'confidence': None, 'embedding': None}
 
         if frame is None:
             return result
@@ -131,6 +131,9 @@ class FaceAuthTransformer:
                 result['match'] = False
                 return result
 
+            # Lưu embedding vào kết quả
+            result['embedding'] = embedding
+
             # Compare with database
             match_info = find_matching_face(embedding)
             result['match'] = match_info if match_info else False
@@ -140,6 +143,11 @@ class FaceAuthTransformer:
         except Exception as e:
             print(f"❌ Error during face recognition: {e}")
             return result
+
+    def get_face_embedding(self, frame):
+        """Get face embedding from a frame without matching with database."""
+        result = self.recognize_face(frame)
+        return result.get('embedding')
 
 
 
