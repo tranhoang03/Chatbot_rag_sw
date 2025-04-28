@@ -30,7 +30,8 @@
             color: #cbd5e1;
         }
         .form-group input[type="text"],
-        .form-group input[type="number"] {
+        .form-group input[type="number"],
+        .form-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #444;
@@ -49,7 +50,7 @@
             font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            background-color: #3b82f6; /* Blue */
+            background-color: #3b82f6;
             color: white;
         }
         .register-button:hover {
@@ -65,25 +66,145 @@
         .back-link:hover {
             text-decoration: underline;
         }
+        #camera-container {
+            display: none;
+            margin-top: 20px;
+        }
+        #video {
+            width: 100%;
+            border-radius: 5px;
+        }
+        #capture-button {
+            margin-top: 10px;
+        }
+        #captured-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .captured-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body class="auth-body">
     <div class="register-container">
         <h1>📝 Đăng ký thông tin</h1>
-        <form action="{{ url_for('register') }}" method="post">
+        <form id="register-form" action="{{ url_for('register') }}" method="post">
             <div class="form-group">
                 <label for="name">Tên của bạn:</label>
                 <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="user_id">ID người dùng (Mô phỏng):</label>
-                <input type="number" id="user_id" name="user_id" required>
-                <small style="color: #9ca3af;">Nhập một số ID duy nhất để mô phỏng.</small>
+                <label for="sex">Giới tính:</label>
+                <select id="sex" name="sex" required>
+                    <option value="">Chọn giới tính</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                </select>
             </div>
-            <!-- Thêm các trường khác nếu cần (ví dụ: upload ảnh) -->
-            <button type="submit" class="register-button">Đăng ký (Mô phỏng)</button>
+            <div class="form-group">
+                <label for="age">Tuổi:</label>
+                <input type="number" id="age" name="age" required min="1" max="120">
+            </div>
+            <div class="form-group">
+                <label for="location">Địa chỉ:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <button type="button" id="next-button" class="register-button">Tiếp tục</button>
         </form>
+
+        <div id="camera-container">
+            <video id="video" autoplay></video>
+            <button id="capture-button" class="register-button">Chụp ảnh</button>
+            <div id="captured-images"></div>
+            <button id="finish-button" class="register-button" style="display: none;">Hoàn tất đăng ký</button>
+        </div>
+
         <a href="{{ url_for('index') }}" class="back-link">Quay lại lựa chọn</a>
     </div>
+
+    <script>
+        let stream = null;
+        let capturedImages = [];
+        const video = document.getElementById('video');
+        const cameraContainer = document.getElementById('camera-container');
+        const registerForm = document.getElementById('register-form');
+        const nextButton = document.getElementById('next-button');
+        const captureButton = document.getElementById('capture-button');
+        const finishButton = document.getElementById('finish-button');
+        const capturedImagesContainer = document.getElementById('captured-images');
+
+        nextButton.addEventListener('click', async () => {
+            if (!registerForm.checkValidity()) {
+                registerForm.reportValidity();
+                return;
+            }
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                registerForm.style.display = 'none';
+                cameraContainer.style.display = 'block';
+                nextButton.style.display = 'none';
+            } catch (err) {
+                alert('Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập.');
+            }
+        });
+
+        let captureCount = 0;
+        captureButton.addEventListener('click', () => {
+            if (captureCount >= 4) return;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            const imageData = canvas.toDataURL('image/jpeg');
+            capturedImages.push(imageData);
+            
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.className = 'captured-image';
+            capturedImagesContainer.appendChild(img);
+            
+            captureCount++;
+            
+            if (captureCount === 4) {
+                captureButton.style.display = 'none';
+                finishButton.style.display = 'block';
+            }
+        });
+
+        finishButton.addEventListener('click', async () => {
+            const formData = new FormData(registerForm);
+            const userData = Object.fromEntries(formData.entries());
+            userData.images = capturedImages;
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    window.location.href = '/authenticate';
+                } else {
+                    alert('Đăng ký thất bại. Vui lòng thử lại.');
+                }
+            } catch (err) {
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            }
+        });
+    </script>
 </body>
 </html>
