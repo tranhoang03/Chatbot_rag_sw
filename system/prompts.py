@@ -75,7 +75,7 @@ class PromptManager:
         7. Đưa số liệu cụ thể khi cần.
         8. Có thể tham khảo lịch sử chat nếu cần tính logic.
         9. Khi tư vấn đồ uống:
-        - Tư vấn tên sản phẩm là tên gốc trong Database
+        - Tư vấn tên sản phẩm là tên gốc có trong kết quả từ hệ thống.
         - Nếu có đủ thông tin: tư vấn chi tiết.
         - Nếu thiếu: chủ động gợi ý cho khách hàng hỏi thêm.
         10. Không nhắc đến ID sản phẩm hoặc danh mục.
@@ -123,7 +123,7 @@ class PromptManager:
             1. Sản phẩm A
             2. Sản phẩm B
         7. Khi tư vấn đồ uống:
-        - Tư vấn tên sản phẩm là tên gốc trong Database
+        - Tên sản phẩm trong đoạn tư vấn phải là tên gốc trong kết quả truy vấn.
         - Nếu có đủ thông tin: tư vấn chi tiết.
         - Nếu thiếu: chủ động gợi ý cho khách hàng hỏi thêm.
         8. Với thông tin cửa hàng:
