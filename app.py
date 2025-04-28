@@ -367,15 +367,15 @@ def process_image():
             return jsonify({'error': 'Failed to extract information from image'}), 500
 
 
-        search_query = f"Sự kết hợp từ các thành phần như {extracted_info.ingredients}, " \
-               f"tạo nên một đồ uống có màu {extracted_info.drink_color}, " \
-               f"thường được phục vụ trong {extracted_info.container_type}."
+        search_query = f"{extracted_info.ingredients}" \
+               f" {extracted_info.drink_color}" \
+               f" {extracted_info.container_type}"
 
 
         if extracted_info.topping != 'None':
-            search_query += f" Trên bề mặt được phủ {extracted_info.topping}"
+            search_query += f" {extracted_info.topping}"
 
-        search_query += f". Lý tưởng cho {extracted_info.suitable_for}"
+        search_query += f" {extracted_info.suitable_for}"
 
         try:
             search_response = rag_system._answer_with_vector(
