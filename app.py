@@ -368,14 +368,14 @@ def process_image():
 
 
         search_query = f"{extracted_info.ingredients}" \
-               f" {extracted_info.drink_color}" \
-               f" {extracted_info.container_type}"
+               f" , màu {extracted_info.drink_color}" \
+               f" ,đựng trong {extracted_info.container_type},"
 
 
         if extracted_info.topping != 'None':
             search_query += f" {extracted_info.topping}"
 
-        search_query += f" {extracted_info.suitable_for}"
+        search_query += f".{extracted_info.suitable_for}"
 
         try:
             search_response = rag_system._answer_with_vector(
@@ -384,7 +384,7 @@ def process_image():
                 user_info, 
                 purchase_history, 
                 is_image_upload=True,
-                image_path=file_path  # Truyền đường dẫn ảnh upload
+                image_path=file_path  
             ) 
 
             # Extract product images from the response
