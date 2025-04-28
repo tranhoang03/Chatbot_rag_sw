@@ -19,6 +19,8 @@ import logging
 from utils import get_purchase_history
 from system.extract_info import LLMExtract
 from search_engine.get_URL_img import extract_product_images
+import sqlite3
+import json
 
 load_dotenv()
 
@@ -149,14 +151,84 @@ def start_anonymous_chat():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    """Handles displaying and processing the registration form (simulation)."""
+    """Handles displaying and processing the registration form."""
+    if request.method == 'GET':
+        return render_template('register.html')
+    
     if request.method == 'POST':
-        name = request.form.get('name')
-        user_id = request.form.get('user_id')
-        print(f"Simulating registration for: Name={name}, ID={user_id}")
-        return redirect(url_for('index'))
+        try:
+            data = request.get_json()
+            name = data.get('name')
+            sex = data.get('sex')
+            age = data.get('age')
+            location = data.get('location')
+            images = data.get('images', [])
 
-    return render_template('register.html') 
+            if not all([name, sex, age, location]):
+                return jsonify({'error': 'Thiếu thông tin bắt buộc'}), 400
+
+            # Kết nối database
+            conn = sqlite3.connect('Database.db')
+            cursor = conn.cursor()
+
+            # Thêm thông tin người dùng vào bảng Customers
+            cursor.execute('''
+                INSERT INTO Customers (name, sex, age, location)
+                VALUES (?, ?, ?, ?)
+            ''', (name, sex, age, location))
+            
+            # Lấy ID vừa tạo
+            user_id = cursor.lastrowid
+            print(f"Đã tạo người dùng mới với ID: {user_id}")
+
+            # Kiểm tra ID có tồn tại trong database
+            cursor.execute('SELECT id FROM Customers WHERE id = ?', (user_id,))
+            if not cursor.fetchone():
+                raise Exception(f"Không tìm thấy người dùng với ID {user_id} trong database")
+
+            # Tạo thư mục lưu ảnh cho người dùng
+            user_img_dir = os.path.join('cus_img', str(user_id))
+            os.makedirs(user_img_dir, exist_ok=True)
+            print(f"Đã tạo thư mục lưu ảnh: {user_img_dir}")
+
+            # Lưu ảnh và tạo embedding
+            embeddings = []
+            for i, image_data in enumerate(images):
+                # Chuyển base64 thành ảnh
+                image_data = image_data.split(',')[1]
+                image_bytes = base64.b64decode(image_data)
+                
+                # Lưu ảnh
+                image_path = os.path.join(user_img_dir, f'image_{i+1}.jpg')
+                with open(image_path, 'wb') as f:
+                    f.write(image_bytes)
+                
+                # Tạo embedding
+                img = decode_image_from_base64(image_data)
+                if img is not None:
+                    transformer = FaceAuthTransformer()
+                    embedding = transformer.get_face_embedding(img)
+                    if embedding is not None:
+                        embeddings.append(embedding)
+
+            if embeddings:
+                combined_embedding = np.vstack(embeddings)
+                embedding_json = json.dumps(combined_embedding.tolist())
+                
+                cursor.execute('''
+                    UPDATE Customers
+                    SET embedding = ?
+                    WHERE id = ?
+                ''', (embedding_json, user_id))
+
+            conn.commit()
+            conn.close()
+
+            return jsonify({'success': True, 'user_id': user_id})
+
+        except Exception as e:
+            print(f"Error during registration: {e}")
+            return jsonify({'error': 'Lỗi hệ thống'}), 500
 
 # --- WebSocket Events ---
 @socketio.on('connect')
