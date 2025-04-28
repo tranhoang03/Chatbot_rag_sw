@@ -1,0 +1,47 @@
+{
+  "anonymous": [],
+  "72": [
+    {
+      "timestamp": "2025-04-27T13:09:07.301114",
+      "query": "Sự kết hợp từ các thành phần như Sô cô la, cà phê, sữa, kem, tạo nên một đồ uống có màu Nâu đậm ở dưới, nâu nhạt hơn ở trên, lớp kem màu be nhạt, thường được phục vụ trong Ly thủy tinh trong suốt có tay cầm. Trên bề mặt được phủ Kem tươi và vụn sô cô la. Lý tưởng cho Những người yêu thích sô cô la và cà phê, thưởng thức trong những buổi chiều thư giãn hoặc những ngày lạnh giá.",
+      "response": "Chào anh Trần Văn Hoàng!\n\nDựa trên hình ảnh, em thấy đồ uống anh đang tìm kiếm có thể là:\n\n1. **Hot Chocolate:** Giá 35.000đ\n\n\nAnh muốn biết thêm thông tin về Hot Chocolate không ạ?\n\nNgoài ra, anh có thể thích Caffè Americano (22.000đ) hoặc Espresso (20.000đ) nữa không ạ?"
+    },
+    {
+      "timestamp": "2025-04-27T13:11:08.194093",
+      "query": "Sự kết hợp từ các thành phần như Sôcôla, sữa, tạo nên một đồ uống có màu Nâu sẫm, thường được phục vụ trong Cốc thủy tinh chân đế. Trên bề mặt được phủ Kem tươi, sốt chocolate. Lý tưởng cho Thời tiết lạnh, những ngày đông",
+      "response": "Chào anh Trần Văn Hoàng!\n\nDựa trên hình ảnh, em thấy đồ uống anh đang tìm kiếm có thể là:\n\n1. **Java Chip Frappuccino:** Giá 38.000đ\n2. **Caramel Frappuccino:** Giá 32.000đ\n\n\nAnh muốn biết thêm thông tin về sản phẩm nào không ạ?\n\nNgoài ra, anh có thể thích Vanilla Bean (40.000đ) nữa không ạ?"
+    },
+    {
+      "timestamp": "2025-04-27T13:16:23.932506",
+      "query": "Sự kết hợp từ các thành phần như Sô cô la, bơ đậu phộng, chuối, tạo nên một đồ uống có màu Nâu đậm, có màu nâu của sô cô la và màu be nhạt của bơ đậu phộng, thường được phục vụ trong Ly thủy tinh hình bầu dục. Trên bề mặt được phủ Socola vụn, bơ đậu phộng, chuối. Lý tưởng cho Món tráng miệng hoặc bữa ăn nhẹ, phù hợp cho những người thích đồ ngọt và sô cô la.",
+      "response": "Chào anh Trần Văn Hoàng!\n\nDựa trên hình ảnh, em thấy đồ uống anh đang tìm kiếm có thể là:\n\n1. **Banana Chocolate Smoothie:** Giá 60.000đ\n\nAnh muốn biết thêm thông tin về Banana Chocolate Smoothie không ạ?\n\nNgoài ra, anh có thể thích Mocha Frappuccino (45.000đ) hoặc Caffè Americano (22.000đ) nữa không ạ?"
+    }
+  ],
+  "29": [
+    {
+      "timestamp": "2025-04-13T15:58:36.357452",
+      "query": "tôi khát",
+      "response": "Chào anh/chị User Name! Trời nóng thế này thì Shaken Iced Tazo Tea Lemonade là lựa chọn tuyệt vời đấy ạ!  Nó có 20% vitamin C, lại mát lạnh nữa.  Mỗi phần có 190 calo và 49g đường."
+    },
+    {
+      "timestamp": "2025-04-13T16:16:00.946996",
+      "query": "tôi muốn uống gì đó để đỡ buồn ngủ",
+      "response": "Lỗi khi xử lý câu hỏi: 'NoneType' object has no attribute 'get'"
+    },
+    {
+      "timestamp": "2025-04-13T16:18:11.835317",
+      "query": "tôi khát, muốn uống gì đó mát",
+      "response": "Lỗi khi xử lý câu hỏi: 'NoneType' object has no attribute 'get'"
+    },
+    {
+      "timestamp": "2025-04-13T16:26:53.324666",
+      "query": "tôi khát]",
+      "response": "Chào anh Son Heung-min! Trời nóng thế này thì một ly Shaken Iced Tazo Tea Lemonade thật tuyệt vời phải không ạ?  Nó mát lạnh, có 20% vitamin C và mỗi phần cỡ Venti có 190 calo, 49g đường.  Anh thích thử không ạ?"
+    },
+    {
+      "timestamp": "2025-04-13T16:27:34.573846",
+      "query": "tôi đang băn khoăn không biết đồ uống bạn gợi ý này hạng thứ bao nhiêu nhỉ",
+      "response": "Chào anh Son Heung-min!  Shaken Iced Tazo Tea Lemonade rất được khách hàng yêu thích đấy ạ!  Tuy nhiên, em không có thông tin xếp hạng cụ thể của sản phẩm này trong hệ thống.  Em xin lỗi vì sự bất tiện này!"
+    }
+  ]
+}
