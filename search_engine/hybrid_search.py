@@ -1,13 +1,12 @@
 import sqlite3
 from typing import List, Dict, Any, Tuple
+import numpy as np
 from config import Config
 from search_engine.feature_extractor import ImageFeatureExtractor
 from search_engine.faiss_indexer import FaissIndexer
-import numpy as np
 from system.embeddings import PhoBERTEmbeddings
 
 class HybridSearchResult:
-    """Class để xử lý kết hợp kết quả từ hai phương pháp tìm kiếm"""
     def __init__(self, config: Config):
         self.config = config
         self.feature_extractor = ImageFeatureExtractor()
@@ -18,42 +17,48 @@ class HybridSearchResult:
         )
         self.embeddings = PhoBERTEmbeddings()
 
-    def _cosine_similarity(self, vec1: np.ndarray, vec2: np.ndarray) -> float:
-        """Tính cosine similarity giữa hai vector"""
-        return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
-
-    def _normalize_text_scores(self, text_results: List[Dict[str, Any]]) -> Dict[str, float]:
-        """Chuẩn hóa điểm tìm kiếm văn bản thành xác suất"""
-        if not text_results:
+    def _normalize_scores(self, results: List[Tuple[Any, float]]) -> Dict[str, float]:
+        """Chuẩn hóa điểm và tính xác suất"""
+        if not results:
+            print("Không có kết quả để chuẩn hóa")
             return {}
-            
-        # Lấy điểm từ kết quả
-        scores = {res['product_id']: res['score'] for res in text_results}
-        
-        # Chuyển đổi điểm thành xác suất bằng softmax
-        values = np.array(list(scores.values()))
-        exp_values = np.exp(values - np.max(values))  # Tránh overflow
-        probs = exp_values / exp_values.sum()
-        
-        return {pid: float(prob) for pid, prob in zip(scores.keys(), probs)}
 
-    def _normalize_image_scores(self, image_results: List[Tuple[Dict[str, Any], float]]) -> Dict[str, float]:
-        """Chuẩn hóa khoảng cách ảnh thành xác suất"""
-        if not image_results:
-            return {}
-            
-        # Lấy khoảng cách từ kết quả
-        distances = {meta['product_id']: dist for meta, dist in image_results}
-        
-        # Chuyển khoảng cách thành similarity
-        # Sử dụng exponential decay để chuyển khoảng cách thành similarity
-        max_dist = max(distances.values())
-        similarities = {pid: np.exp(-dist/max_dist) for pid, dist in distances.items()}
-        
-        # Chuẩn hóa thành xác suất
+        distances = {}
+        for result in results:
+            try:
+                if isinstance(result, dict):
+                    product_id = result.get('product_id')
+                    if product_id:
+                        distances[product_id] = result.get('score', 0.0)
+                else:
+                    meta, dist = result
+                    product_id = meta.get('product_id') if isinstance(meta, dict) else meta.metadata.get('ID')
+                    if product_id:
+                        distances[product_id] = dist
+            except Exception as e:
+                print(f"Lỗi khi xử lý kết quả: {e}")
+
+        values = np.array(list(distances.values()))
+        mean, std = np.mean(values), np.std(values)
+        normalized_dist = {pid: (dist - mean) / (std + 1e-6) for pid, dist in distances.items()}
+
+        print("\n=== Điểm sau chuẩn hóa (z-score) ===")
+        for pid, dist in normalized_dist.items():
+            print(f"Product {pid}: Normalized distance = {dist:.4f}")
+
+        similarities = {pid: np.exp(-dist) for pid, dist in normalized_dist.items()}
+
+        print("\n=== Similarity scores ===")
+        for pid, sim in similarities.items():
+            print(f"Product {pid}: Similarity = {sim:.4f}")
+
         sum_sim = sum(similarities.values())
-        probs = {pid: sim/sum_sim for pid, sim in similarities.items()}
-        
+        probs = {pid: sim / sum_sim for pid, sim in similarities.items()}
+
+        print("\n=== Xác suất cuối cùng ===")
+        for pid, prob in probs.items():
+            print(f"Product {pid}: Probability = {prob:.4f}")
+
         return probs
 
     def search_by_image_features(self, image_path: str, k: int = 5) -> List[Tuple[Dict[str, Any], float]]:
@@ -65,74 +70,59 @@ class HybridSearchResult:
                 print("Không thể trích xuất đặc trưng ảnh")
                 return []
             print("Trích xuất đặc trưng ảnh thành công")
-            
+
             print("\n=== Tìm kiếm trong FAISS index ===")
-            results = self.indexer.search(query_feature, k)
-            return results
+            return self.indexer.search(query_feature, k)
         except Exception as e:
             print(f"Lỗi khi tìm kiếm theo đặc trưng ảnh: {e}")
             return []
 
     def combine_results_mbr(self,
-                            text_results: List[Dict[str, Any]],
-                            image_results: List[Tuple[Dict[str, Any], float]],
+                            text_results: list,
+                            image_results: list,
                             alpha: float = 0.5,
-                            k: int = 3) -> List[Dict[str, Any]]:
-        print("\n=== Kết hợp kết quả theo Minimum Bayes Risk với xác suất chuẩn hóa ===")
+                            k: int = 3) -> list:
+        print("\n=== Kết hợp kết quả theo Minimum Bayes Risk với tổng độ tương đồng mô tả sản phẩm ===")
 
-        # Xử lý các trường hợp không có kết quả
-        if not text_results and not image_results:
-            print("Không có kết quả nào từ cả hai phương pháp tìm kiếm")
-            return []
-            
-        if not text_results:
-            print("Chỉ có kết quả từ tìm kiếm ảnh")
-            return [meta for meta, _ in image_results[:k]]
-            
-        if not image_results:
-            print("Chỉ có kết quả từ tìm kiếm văn bản")
-            return text_results[:k]
+        text_probs = self._normalize_scores([
+            (r, r.get('score', 0.0)) if isinstance(r, dict) else r for r in text_results
+        ])
+        image_probs = self._normalize_scores(image_results)
 
-        # Chuẩn hóa điểm thành xác suất
-        print("\n=== Thông tin chuẩn hóa ===")
-        text_probs = self._normalize_text_scores(text_results)
-        image_probs = self._normalize_image_scores(image_results)
-        print("Xác suất văn bản:", text_probs)
-        print("Xác suất ảnh:", image_probs)
-
-        # Tạo danh sách ứng viên
         candidates = {}
-        for res in text_results:
-            candidates[res['product_id']] = res
-        for meta, _ in image_results:
-            if meta['product_id'] not in candidates:
-                candidates[meta['product_id']] = meta
+        for results in (text_results, image_results):
+            for result in results:
+                meta = result if isinstance(result, dict) else result[0]
+                product_id = meta.get('product_id') if isinstance(meta, dict) else meta.metadata.get('ID')
+                if product_id and product_id not in candidates:
+                    candidates[product_id] = meta if isinstance(meta, dict) else meta.metadata
 
-        # Tính rủi ro kỳ vọng cho từng ứng viên
-        risks = []
-        for candidate_id in candidates:
-            # Lấy xác suất từ hai phương pháp
-            text_prob = text_probs.get(candidate_id, 0.0)
-            image_prob = image_probs.get(candidate_id, 0.0)
-            
-            # Tính rủi ro kỳ vọng
-            risk = alpha * (1 - image_prob) + (1 - alpha) * (1 - text_prob)
-            risks.append((candidate_id, risk))
+        def compute_similarity(desc1, desc2):
+            emb1 = np.array(self.embeddings.embed_query(desc1))
+            emb2 = np.array(self.embeddings.embed_query(desc2))
+            return float(np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2) + 1e-8))
 
-        print("\n=== Thông tin rủi ro ===")
-        for candidate_id, risk in risks:
-            print(f"Candidate {candidate_id}:")
-            print(f"  Text prob: {text_probs.get(candidate_id, 0.0):.4f}")
-            print(f"  Image prob: {image_probs.get(candidate_id, 0.0):.4f}")
-            print(f"  Total risk: {risk:.4f}")
+        scores = []
+        for candidate_id, candidate in candidates.items():
+            desc_cand = candidate.get('description', '')
+            sim_image = sum(
+                image_probs.get(meta.get('product_id'), 0.0) * compute_similarity(desc_cand, meta.get('description', ''))
+                for meta, _ in image_results
+            )
+            sim_text = sum(
+                text_probs.get(
+                    (r if isinstance(r, dict) else r[0]).get('product_id'), 0.0
+                ) * compute_similarity(desc_cand, (r if isinstance(r, dict) else r[0]).get('description', ''))
+                for r in text_results
+            )
+            scores.append((candidate_id, alpha * sim_image + (1 - alpha) * sim_text))
 
-        # Sắp xếp theo rủi ro thấp nhất
-        risks.sort(key=lambda x: x[1])
-        top_candidates = [candidates[r[0]] for r in risks[:k]]
+        scores.sort(key=lambda x: -x[1])
+        top_candidates = [candidates[cid] for cid, _ in scores[:k]]
 
         print("\n=== Top kết quả sau khi áp dụng MBR ===")
         for i, item in enumerate(top_candidates):
-            print(f"Rank {i+1}: ID {item['product_id']}, Mô tả: {item['description']}")
+            print(f"Rank {i+1}: ID {item.get('ID', item.get('product_id'))}, Mô tả: {item.get('description', '')}")
 
         return top_candidates
 
@@ -152,14 +142,10 @@ class HybridSearchResult:
             """, (product_id,))
             row = cursor.fetchone()
             conn.close()
-            
+
             if row:
-                return {
-                    'name': row[0],
-                    'description': row[1],
-                    'price': row[2]
-                }
+                return {'name': row[0], 'description': row[1], 'price': row[2]}
             return None
         except Exception as e:
             print(f"Lỗi khi lấy thông tin sản phẩm {product_id}: {e}")
-            return None 
+            return None
