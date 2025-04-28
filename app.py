@@ -18,7 +18,7 @@ import cv2
 import logging
 from utils import get_purchase_history
 from system.extract_info import LLMExtract
-from get_URL_img import extract_product_images
+from search_engine.get_URL_img import extract_product_images
 
 load_dotenv()
 
