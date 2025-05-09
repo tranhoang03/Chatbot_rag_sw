@@ -133,98 +133,71 @@ class OptimizedRAGSystem:
             print(f"Error creating description vector store: {e}")
             return None
    
-    def _define_tools(self) -> List[Dict[str, Any]]:
-     
-        sql_tool_schema = {
-            "name": "use_sql_tool",
-            "description": """Sử dụng công cụ này khi truy vấn của người dùng yêu cầu truy xuất, tính toán
-                            hoặc tổng hợp dữ liệu có cấu trúc từ cơ sở dữ liệu.
-                            Công cụ này phù hợp với các câu hỏi cần số liệu cụ thể, danh sách, tổng, trung bình,
-                            đếm số lượng, so sánh, sắp xếp, lọc hoặc thống kê dựa trên dữ liệu trong bảng.
-                            Ví dụ: "Tính tổng doanh thu tháng 5", "Liệt kê 3 sản phẩm bán chạy nhất",
-                            "Có bao nhiêu đơn hàng", "Sản phẩm nào giá dưới 50k", "So sánh doanh số".
-                            KHÔNG sử dụng công cụ này cho các câu hỏi chung, mô tả, hay ý kiến.""",
-            "parameters": {
-                "type": "object",
-                "properties": {},
-                "required": []
-            }
-        }
-
-        vector_tool_schema = {
-            "name": "use_vector_tool",
-            "description": """Sử dụng công cụ này khi truy vấn của người dùng mang tính chung chung, mô tả,
-                            giải thích, đưa ra ý kiến, gợi ý hoặc tìm kiếm theo ngữ nghĩa
-                            mà KHÔNG yêu cầu tính toán hoặc truy xuất dữ liệu chính xác từ cơ sở dữ liệu.
-                            Công cụ này phù hợp với các câu hỏi về mô tả sản phẩm, hướng dẫn sử dụng,
-                            thông tin về cửa hàng (nếu không có trong CSDL), lời khuyên chung, hoặc khi câu hỏi
-                            mang tính trò chuyện, chào hỏi, hoặc nằm ngoài phạm vi dữ liệu trong DB.
-                            Ví dụ: "Trà sữa trân châu đường đen có vị như thế nào?", "Cửa hàng mở cửa mấy giờ?",
-                            "Gợi ý đồ uống giải nhiệt", "Chào bạn", "Bạn có thể làm gì?".
-                            Sử dụng công cụ này như phương án dự phòng nếu không có công cụ nào khác phù hợp.""",
-            "parameters": {
-                "type": "object",
-                "properties": {},
-                "required": []
-            }
-        }
-
-        return [sql_tool_schema, vector_tool_schema]
+    
 
     def _get_database_schema(self) -> str:
-        """Get database schema information"""
+        """Get database schema information with descriptions"""
         try:
             conn = sqlite3.connect(self.config.db_path)
             cursor = conn.cursor()
-            
+
+            # Định nghĩa mô tả cho từng bảng
+            table_descriptions = {
+                "order": "Lưu thông tin đơn hàng của khách hàng",
+                "product": "Chứa thông tin về tên, mô tả về thành phần, màu sắc đồ uống,... và hình ảnh của các sản phẩm đang bán",
+                "variant": "Chứa thông tin chi tiết về từng biến thể của một sản phẩm đồ uống như kích cỡ, hàm lượng dinh dường, giá, hạng bán ra.",
+                "categories": "Lưu thông tin về các danh mục phân loại sản phẩm đồ uống. Mỗi danh mục đại diện cho một nhóm các đồ uống",
+            }
+
             cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
             tables = cursor.fetchall()
-            
+
             schema_info = []
             for table in tables:
                 table_name = table[0]
                 
-                # Get table schema
+                # Bỏ qua bảng customers và customer_preferences
+                if table_name.lower() in ["customers", "customer_preferences"]:
+                    continue
+
+                # Lấy thông tin schema
                 cursor.execute(f"PRAGMA table_info({table_name})")
                 columns = cursor.fetchall()
-                
+
                 cursor.execute(f"PRAGMA foreign_key_list({table_name})")
                 foreign_keys = cursor.fetchall()
-                
+
                 cursor.execute(f"PRAGMA index_list({table_name})")
                 indexes = cursor.fetchall()
-                
+
                 # Format column information
                 column_info = []
                 for col in columns:
                     col_name = col[1]
                     col_type = col[2]
-                    is_pk = col[5] == 1  # Check if column is primary key
+                    is_pk = col[5] == 1
                     pk_info = " (PRIMARY KEY)" if is_pk else ""
-                    
-                    # Bỏ qua cột embedding trong bảng Customers
-                    if table_name == "customers" and col_name == "embedding":
-                        continue
-                        
                     column_info.append(f"{col_name} ({col_type}){pk_info}")
-                
+
                 # Format foreign key information
                 fk_info = []
                 for fk in foreign_keys:
-                    ref_table = fk[2]  
-                    from_col = fk[3]   
-                    to_col = fk[4]     
+                    ref_table = fk[2]
+                    from_col = fk[3]
+                    to_col = fk[4]
                     fk_info.append(f"FOREIGN KEY ({from_col}) REFERENCES {ref_table}({to_col})")
-                
+
+                # Format index information
                 index_info = []
                 for idx in indexes:
                     idx_name = idx[1]
                     is_unique = idx[2] == 1
-                    if not idx_name.startswith('sqlite_autoindex'):  # Skip auto-generated indexes
+                    if not idx_name.startswith('sqlite_autoindex'):
                         index_info.append(f"{'UNIQUE ' if is_unique else ''}INDEX {idx_name}")
-                
-                # Combine all information
-                table_info = [f"Bảng {table_name}:"]
+
+                # Mô tả bảng (nếu có)
+                description = table_descriptions.get(table_name.lower(), "Không có mô tả.")
+                table_info = [f"Bảng {table_name}: {description}"]
                 table_info.extend(column_info)
                 if fk_info:
                     table_info.append("\nKhóa ngoại:")
@@ -232,12 +205,12 @@ class OptimizedRAGSystem:
                 if index_info:
                     table_info.append("\nChỉ mục:")
                     table_info.extend(index_info)
-                
+
                 schema_info.append("\n".join(table_info))
-            
+
             conn.close()
             return "\n\n".join(schema_info)
-            
+ 
         except Exception as e:
             print(f"Error getting database schema: {e}")
             return ""
@@ -293,7 +266,7 @@ class OptimizedRAGSystem:
                 text_results = []
                 for doc, score in text_docs:
                     # Lấy product_id từ metadata của văn bản
-                    product_id = doc.metadata.get('ID')  # Sửa lại key để khớp với metadata đã tạo
+                    product_id = doc.metadata.get('ID')  
                     if product_id:
                         # Lấy thông tin sản phẩm từ database
                         product_info = hybrid_search._get_product_info(product_id)
@@ -304,7 +277,7 @@ class OptimizedRAGSystem:
                                 'description': product_info['description'],
                                 'price': product_info['price'],
                                 'image_source': product_info.get('image_source', ''),
-                                'score': score  # Thêm score vào metadata
+                                'score': score  
                             })
                 
                 # Chuẩn hóa metadata từ kết quả ảnh
@@ -312,7 +285,7 @@ class OptimizedRAGSystem:
                 for meta, dist in image_results:
                     product_id = meta.get('product_id')
                     if product_id:
-                        # Lấy thông tin sản phẩm từ database
+                        
                         product_info = hybrid_search._get_product_info(product_id)
                         if product_info:
                             image_results_normalized.append(({
@@ -367,9 +340,14 @@ class OptimizedRAGSystem:
     def _answer_with_sql(self, user_key: str, query: str, user_info: dict, purchase_history: list) -> str:
         """Answer query using SQL"""
         try:
+            # Lấy đoạn chat gần nhất
+            latest_chat = self.chat_history.get_latest_chat(user_key)
 
-            sql_prompt = PromptManager.get_sql_generation_prompt(query, self._get_database_schema())
-
+            sql_prompt = PromptManager.get_sql_generation_prompt(
+                query=query, 
+                schema_info=self._get_database_schema(),
+                history=latest_chat
+            )
             sql_query_response = self.llm.invoke(sql_prompt)
 
             sql_query_string = sql_query_response.content.strip() if hasattr(sql_query_response, 'content') else str(sql_query_response).strip()
