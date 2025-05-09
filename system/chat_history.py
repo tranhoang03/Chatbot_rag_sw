@@ -75,6 +75,19 @@ class ChatHistory:
             history_text += f"A: {entry['response']}\n"
         return history_text.strip() # Remove trailing newline
 
+    def get_latest_chat(self, user_key: str) -> str:
+        """Get only the latest chat entry for a specific user key as a formatted string."""
+        user_history = self.histories.get(user_key, [])
+        if not user_history:
+            return ""
+
+        # Lấy đoạn chat gần nhất
+        latest_entry = user_history[-1]
+        history_text = "Lịch sử trò chuyện gần đây:\n"
+        history_text += f"Q: {latest_entry['query']}\n"
+        history_text += f"A: {latest_entry['response']}\n"
+        return history_text.strip() # Remove trailing newline
+
     def clear_history(self, user_key: str):
         """Clear chat history for a specific user key."""
         if user_key in self.histories:
