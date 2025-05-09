@@ -2,14 +2,19 @@ from typing import List, Dict, Any
 
 class PromptManager:
     @staticmethod
-    def get_sql_generation_prompt(query: str, schema_info: str) -> str:
+    def get_sql_generation_prompt(query: str, schema_info: str, history: str = "") -> str:
         return f"""
         Bạn là trợ lý thông minh chuyên chuyển đổi câu hỏi tự nhiên thành truy vấn SQL đúng cú pháp trên SQLite.
 
         Câu hỏi: "{query}"
         Schema: {schema_info}
 
-        Yêu cầu:
+        **Lịch sử trò chuyện gần nhất:**
+        {history}
+        **Hướng dẫn**
+        1. Ưu tiên tạo truy vấn SQL dựa trên câu hỏi khách hànghàng
+        2. Trong trường hợp câu hỏi không rõ ràng HÃY sử dụng "Lịch sử trò chuyện gần nhất" Để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại 
+        **Yêu cầu:**
         1. Chỉ sử dụng các bảng và cột có trong schema.
         2. Chỉ tạo truy vấn SELECT.
         3. Không dùng các từ khóa nguy hiểm như DROP, DELETE, UPDATE, INSERT, ALTER, TRUNCATE.
@@ -28,7 +33,8 @@ class PromptManager:
             SELECT p.Name, p.Price FROM Product p JOIN Categories c ON p.Categories_id = c.Id 
             WHERE (c.Name LIKE '%Cà phê%' OR c.Name LIKE '%Coffee%') AND p.Price < 25000
         10. Mở rộng truy vấn để cung cấp thông tin đầy đủ và giàu giá trị phân tích hơn: Ví dụ: Nếu khách hỏi giá của đồ uống Coffe thì ngoài giá có thể SELECT thêm các trường liên quan như Tên, Mô tả, ...
-        Quy tắc:
+        11. Tham khảo lịch sử trò chuyện gần nhất để hiểu rõ hơn ngữ cảnh của câu hỏi hiện tại.
+        **Quy tắc:**
         - CHỈ trả về truy vấn SQL hợp lệ mà không kèm giải thích.
         - KHÔNG dùng Markdown code block hoặc comment.
         - TRUY VẤN phải chạy được trên SQLite.
@@ -66,16 +72,16 @@ class PromptManager:
         - Khách hỏi gợi ý sản phẩm.
         - Thể hiện phân vân.
         - Câu hỏi cần biết sở thích trước đó.
-        (Không dùng nếu không liên quan, ví dụ hỏi giờ mở cửa.)
         3. Trả lời ngắn gọn, tự nhiên, tránh lặp lại cấu trúc trả lời.
         4. Chỉ dùng thông tin có sẵn và kết quả tính toán.
-        5. Giữ nhất quán với các câu trước đó.
+        5. Nên sử dụng lịch sử trò chuyện trong để:
+            -Giữ nhất quán với các câu trước đó dựa trên lịch sử trò chuyện.
+            -Để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại nếu câu truy vấn không rõ ràng  
         6. Hiển thị danh sách rõ ràng nếu cần:
             Ví dụ:
             1. Sản phẩm A
-            2. Sản phẩm B
-        7. Có thể tham khảo lịch sử chat nếu cần tính logic.
-        8. Khi tư vấn đồ uống:
+            2. Sản phẩm B  
+        7. Khi tư vấn đồ uống:
         - Tư vấn tên sản phẩm là tên gốc có trong kết quả từ hệ thống.
         - Nếu có đủ thông tin: tư vấn chi tiết.
         - Nếu thiếu: chủ động gợi ý cho khách hàng hỏi thêm.
@@ -117,7 +123,9 @@ class PromptManager:
         - Kết quả không đủ rõ, cần thêm sở thích.
         3. Trả lời ngắn gọn, thân thiện, tự nhiên.
         4. Ưu tiên kết quả SQL, chỉ dùng lịch sử chat khi cần hỗ trợ suy luận.
-        5. Đảm bảo logic và thống nhất với các câu trả lời trước.
+                5. Nên sử dụng lịch sử trò chuyện trong để:
+            -Giữ nhất quán với các câu trước đó dựa trên lịch sử trò chuyện.
+            -Để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại nếu câu truy vấn không rõ ràng  
         6. Nếu có nhiều lựa chọn, liệt kê theo số thứ tự.
             Ví dụ:
             1. Sản phẩm A
