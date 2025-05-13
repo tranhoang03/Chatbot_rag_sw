@@ -61,9 +61,6 @@ def index():
             purchase_history = get_purchase_history(user_info['id'])
         return render_template('chat.html', user_info=user_info, purchase_history=purchase_history)
     else:
-        session.pop('authenticated', None)
-        session.pop('user_info', None)
-        session.pop('anonymous', None)
         return render_template('auto_auth.html')
 
 @app.route('/chat', methods=['POST'])
@@ -229,6 +226,14 @@ def register():
         except Exception as e:
             print(f"Error during registration: {e}")
             return jsonify({'error': 'Lỗi hệ thống'}), 500
+
+@app.route('/reset_session')
+def reset_session():
+    """Reset session and redirect to auth page."""
+    session.pop('authenticated', None)
+    session.pop('user_info', None)
+    session.pop('anonymous', None)
+    return redirect(url_for('index'))
 
 # --- WebSocket Events ---
 @socketio.on('connect')
