@@ -10,7 +10,6 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-# Load biến môi trường từ file .env
 load_dotenv()
 
 # ----------------- Khai báo schema thông tin đồ uống ----------------- #
@@ -79,19 +78,17 @@ class LLMExtract:
             ),
         ]
 
-        # Lấy API key từ .env
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             print("GOOGLE_API_KEY is not set.Check .env file.")
             return None
 
         llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash-latest",
-            temperature=0.7,
+            model=os.getenv("GOOGLE_GENAI_MODEL", "gemini-1.5-flash-latest"),
+            temperature=float(os.getenv("GOOGLE_GENAI_TEMPERATURE", 0)),
             google_api_key=api_key
         )
 
-        # Gọi mô hình
         try:
             response = llm.invoke(prompt)
             data = parser.parse(response.content)
