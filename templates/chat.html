@@ -371,6 +371,11 @@
                 }
             }
 
+            // Xử lý reload trang
+            window.addEventListener('beforeunload', function() {
+                fetch('/reset_session');
+            });
+
         </script>
     </body>
     </html> 
