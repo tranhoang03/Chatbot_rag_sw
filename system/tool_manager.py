@@ -59,13 +59,13 @@ class ToolManager:
 
         Câu hỏi của người dùng: {query}
 
-        Các công cụ bạn có thể sử dụng:
+        Hai công cụ bạn có thể sử dụng:
         {tools_list_str}
 
         Cơ sở dữ liệu:
         {data_schema}
 
-        Hãy chọn MỘT công cụ DUY NHẤT phù hợp nhất để trả lời câu hỏi này. Nếu câu hỏi không yêu cầu sử dụng công cụ nào (ví dụ: chào hỏi, cảm ơn đơn thuần), bạn có thể trả lời trực tiếp bằng văn bản.
+        Hãy chọn MỘT công cụ DUY NHẤT phù hợp nhất để trả lời câu hỏi này. 
         """
         return prompt.strip()
 
