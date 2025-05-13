@@ -3,6 +3,7 @@ import os
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
+
 class ChatHistory:
     def __init__(self, history_file: str = "chat_histories.json", max_history_per_user: int = 3):
         """Initializes ChatHistory to manage multiple user histories."""
@@ -75,18 +76,20 @@ class ChatHistory:
             history_text += f"A: {entry['response']}\n"
         return history_text.strip() # Remove trailing newline
 
+  
     def get_latest_chat(self, user_key: str) -> str:
-        """Get only the latest chat entry for a specific user key as a formatted string."""
+        """Lấy đoạn chat gần nhất theo timestamp cho một user cụ thể."""
         user_history = self.histories.get(user_key, [])
         if not user_history:
             return ""
 
-        # Lấy đoạn chat gần nhất
-        latest_entry = user_history[-1]
+        # Sắp xếp theo timestamp giảm dần và lấy phần tử đầu tiên
+        latest_entry = max(user_history, key=lambda x: datetime.fromisoformat(x['timestamp']))
+        
         history_text = "Lịch sử trò chuyện gần đây:\n"
         history_text += f"Q: {latest_entry['query']}\n"
         history_text += f"A: {latest_entry['response']}\n"
-        return history_text.strip() # Remove trailing newline
+        return history_text.strip()
 
     def clear_history(self, user_key: str):
         """Clear chat history for a specific user key."""
