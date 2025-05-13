@@ -112,7 +112,7 @@ FLASK_SECRET_KEY=your_flask_secret_key
 # Nếu cần dữ liệu mẫu, import vào Database.db
 ```
 
-### Bước 5: Xây Dựng Chỉ Mục Hình Ảnh
+### Bước 5: Xây Dựng Chỉ Mục Hình Ảnh Sản Phẩm
 ```bash
 python search_engine/build_image_index.py
 ```
