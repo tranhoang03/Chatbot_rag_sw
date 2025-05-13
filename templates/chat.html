@@ -12,56 +12,77 @@
             <div class="sidebar" id="sidebar">
                 <!-- Sidebar Toggle Button -->
                 <button id="sidebar-toggle">☰</button> <br>
-                {% if user_info %}
-                    <h3>👤 Thông tin người dùng</h3>
-                    <p><strong>Tên:</strong> {{ user_info.name }}</p>
-                    <p><strong>ID:</strong> {{ user_info.id }}</p>
-                    <h3>🛍️ Lịch sử mua hàng</h3>
-                    {% if purchase_history %}
-                        {% for item in purchase_history %}
-                            <div class="purchase-history-item">
-                                <strong>{{ item.date }}</strong><br>
-                                Sản phẩm: {{ item.product }}<br>
-                                Số lượng: {{ item.quantity }}<br>
-                                Giá: {{ item.price }}đ<br>
-                                Đánh giá: {{ item.rate }}⭐<br>
-                            </div>
-                        {% endfor %}
+                
+                <!-- Phần thông tin người dùng -->
+                <div class="sidebar-user-section">
+                    {% if user_info %}
+                        <h3><span style="font-size: 0.95em;">👤</span> Thông tin người dùng</h3>
+                        <div style="background-color: #1e1e2e; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <p style="font-size: 1.33em; color: #facc15; margin: 0 0 0.5rem 0;">{{ user_info.name }}</p>
+                            <p style="font-size: 1em; color: #cbd5e1; margin: 0;">Khách hàng thân thiết</p>
+                            {% if purchase_history %}
+                                <p style="font-size: 0.95em; color: #cbd5e1; margin: 0.5rem 0 0 0;">Số đơn hàng: <strong>{{ purchase_history|length }}</strong></p>
+                            {% endif %}
+                        </div>
+                        
+                        <h3><span style="font-size: 0.95em;">🛍️</span> Lịch sử mua hàng</h3>
+                        <div class="purchase-history">
+                            {% if purchase_history %}
+                                {% for item in purchase_history %}
+                                    <div class="purchase-history-item">
+                                        <strong>{{ item.date }}</strong><br>
+                                        Sản phẩm: {{ item.product }}<br>
+                                        Số lượng: {{ item.quantity }}<br>
+                                        Giá: {{ item.price }}đ<br>
+                                        Đánh giá: {{ item.rate }}⭐<br>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>Chưa có lịch sử mua hàng.</p>
+                            {% endif %}
+                        </div>
                     {% else %}
-                        <p>Chưa có lịch sử mua hàng.</p>
+                        <h3><span style="font-size: 0.95em;">👤</span> Khách ẩn danh</h3>
+                        <p>Bạn đang chat ẩn danh. Hãy <a href="{{ url_for('register') }}" style="color: #facc15;">đăng ký</a> để có trải nghiệm cá nhân hóa.</p>
+                        <a href="{{ url_for('register') }}" style="text-decoration: none; display: block; margin-bottom: 12px;">
+                            <button class="logout-button" style="background-color: #3b82f6; width: 100%; margin-bottom: 0;">📝 Đăng ký tài khoản mới</button>
+                        </a>
                     {% endif %}
-                {% else %}
-                    <h3>👤 Khách ẩn danh</h3>
-                    <p>Bạn đang chat ẩn danh. Hãy <a href="{{ url_for('register') }}" style="color: #facc15;">đăng ký</a> để có trải nghiệm cá nhân hóa.</p>
-                    <a href="{{ url_for('register') }}" style="text-decoration: none; margin-top: auto; display: block; margin-bottom: 12px;">
-                        <button class="logout-button" style="background-color: #3b82f6; width: 100%; margin-bottom: 0;">📝 Đăng ký tài khoản mới</button>
+
+                    <a href="{{ url_for('logout') }}" style="text-decoration: none;">
+                        <button class="logout-button">🚪 Đăng xuất</button>
                     </a>
-                {% endif %}
-
-                <a href="{{ url_for('logout') }}" style="text-decoration: none; margin-top: 0;">
-                    <button class="logout-button">🚪 Đăng xuất</button>
-                </a>
-
-                <hr style="border-color: #444; margin: 1rem 0;">
-                <h3>ℹ️ Thông tin thêm</h3>
-                <h4>About</h4>
-                <p style="font-size: 0.85em;">This is a RAG (Retrieval-Augmented Generation) chatbot...</p>
-                <h4>Features</h4>
-                <ul style="font-size: 0.85em; padding-left: 20px;">
-                    <li>🔍 Semantic search</li>
-                    <li>🧠 Context-aware responses</li>
-                    <li>📚 Knowledge base integration</li>
-                    <li>👤 Personalized recommendations</li>
-                    <li>📸 Face Authentication</li>
-                </ul>
-                <h4>How to use</h4>
-                <ol style="font-size: 0.85em; padding-left: 20px;">
-                    <li>Look at the camera for auth.</li>
-                    <li>Type your question.</li>
-                    <li>Wait for the response.</li>
-                </ol>
-                <hr style="border-color: #444; margin: 1rem 0;">
-                <p style="font-size: 0.8em;">Need help? Contact us:<br>📧 tranhoang0320@gmail.com<br>📧 tranthithanhhue@gmail.com</p>
+                </div>
+                
+                <!-- Phần thông tin thêm -->
+                <div class="sidebar-info-section">
+                    <hr style="border-color: #444; margin: 0.8rem 0;">
+                    <h3><span style="font-size: 0.95em;">ℹ️</span> Thông tin thêm</h3>
+                    <h4>Giới thiệu</h4>
+                    <p style="font-size: 0.85em;">Chatbot RAG (Tạo sinh có tăng cường truy xuất dữ liệu)</p>
+                    <h4>Tính năng</h4>
+                    <ul style="font-size: 0.85em;">
+                        <li>🔍 Tìm kiếm ngữ nghĩa thông minh</li>
+                        <li>🧠 Phản hồi theo ngữ cảnh</li>
+                        <li>📚 Tích hợp kho tri thức</li>
+                        <li>👤 Gợi ý cá nhân hóa</li>
+                        <li>📸 Xác thực khuôn mặt</li>
+                    </ul>
+                    <h4>Cách sử dụng</h4>
+                    <ol style="font-size: 0.85em;">
+                        <li>💬 Nhập câu hỏi hoặc yêu cầu vào ô chat.</li>
+                        <li>➡️ Nhấn <b>Gửi</b> hoặc <b>Enter</b> để gửi.</li>
+                        <li>🖼️ Tải ảnh lên bằng nút 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="vertical-align: middle; margin-bottom: 2px;" viewBox="0 0 16 16">
+                              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                              <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                            </svg>
+                            cạnh ô nhập.
+                        </li>
+                        <li>🤖 Xem phản hồi và hình ảnh sản phẩm từ chatbot.</li>
+                    </ol>
+                    <p style="font-size: 0.8em; margin-top: 0.5rem;">Cần hỗ trợ? Liên hệ: 📧 tranhoang0320@gmail.com</p>
+                </div>
             </div>
 
             <!-- Main Chat Area -->
@@ -100,7 +121,7 @@
 
             const imageUpload = document.getElementById('image-upload');
             const uploadButton = document.getElementById('upload-button');
-
+            
             function addMessage(role, content) {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('chat-message');
