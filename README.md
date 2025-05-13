@@ -1,83 +1,96 @@
 # Hệ Thống Trợ Lý Cửa Hàng Đồ Uống Thông Minh
 
-Hệ thống trợ lý thông minh cho cửa hàng đồ uống, tích hợp xác thực khuôn mặt, RAG (Retrieval-Augmented Generation) và nhận dạng hình ảnh để cung cấp dịch vụ khách hàng cá nhân hóa.
+Hệ thống trợ lý AI cho cửa hàng đồ uống, tích hợp xác thực khuôn mặt, RAG (Retrieval-Augmented Generation), nhận dạng hình ảnh và chat thông minh, giúp cá nhân hóa trải nghiệm khách hàng.
 
-## 🚀 Tính Năng Chính
+## 🚀 Tính Năng Nổi Bật
 
-### 1. Xác Thực Khuôn Mặt
-- Nhận dạng khuôn mặt thời gian thực
-- Xác thực khách hàng an toàn
-- Quản lý phiên đăng nhập
-- Hỗ trợ chat ẩn danh
+- **Xác thực khuôn mặt**: Đăng nhập, nhận diện khách hàng qua webcam, bảo mật và tiện lợi.
+- **Chat AI thông minh**: Trả lời tự động, đề xuất đồ uống, hỗ trợ truy vấn SQL, tìm kiếm ngữ nghĩa dựa trên lịch sử mua hàng.
+- **Nhận dạng hình ảnh**: Phân tích, nhận diện đồ uống từ ảnh, trích xuất thành phần, đề xuất sản phẩm tương tự.
+- **Quản lý khách hàng & sản phẩm**: Lưu trữ thông tin, lịch sử mua hàng, sở thích, hỗ trợ cá nhân hóa.
+- **Giao diện web hiện đại**: Đăng nhập, chat, đăng ký, xác thực, thao tác trực quan.
 
-### 2. Hệ Thống Chat Thông Minh
-- Phản hồi theo ngữ cảnh sử dụng RAG
-- Đề xuất cá nhân hóa dựa trên lịch sử mua hàng
-- Hỗ trợ tìm kiếm SQL và tìm kiếm ngữ nghĩa
-- Xử lý hội thoại đa lượt
+## 🛠 Công Nghệ Sử Dụng
 
-### 3. Nhận Dạng Hình Ảnh
-- Nhận dạng và phân tích đồ uống từ hình ảnh
-- Phát hiện thành phần và cấu tạo
-- Đề xuất đồ uống thông minh dựa trên độ tương đồng hình ảnh
-- Tích hợp OCR để trích xuất văn bản từ hình ảnh
+- **Flask** & **Flask-SocketIO**: Xây dựng web, realtime chat.
+- **InsightFace** & **ONNX**: Nhận diện khuôn mặt.
+- **PhoBERT** & **Google Generative AI**: Xử lý ngôn ngữ tự nhiên tiếng Việt.
+- **FAISS**: Tìm kiếm ngữ nghĩa, vector store.
+- **OpenCV, Pillow**: Xử lý ảnh.
+- **SQLite**: Lưu trữ dữ liệu.
+- **dotenv**: Quản lý biến môi trường.
 
-### 4. Tích Hợp Cơ Sở Dữ Liệu
-- SQLite để lưu trữ thông tin sản phẩm và khách hàng
-- Vector store cho khả năng tìm kiếm ngữ nghĩa
-- Theo dõi lịch sử mua hàng
-- Quản lý sở thích khách hàng
+## 📦 Hướng Dẫn Cài Đặt
 
-## 🛠 Kiến Trúc Kỹ Thuật
-
-### Thành Phần Chính
-- **Xác thực khuôn mặt**: Sử dụng InsightFace cho phát hiện và nhận dạng khuôn mặt
-- **Hệ thống RAG**: Kết hợp PhoBERT embeddings với Google Generative AI
-- **Vector Store**: FAISS cho tìm kiếm tương đồng hiệu quả
-- **Giao diện Web**: Flask + SocketIO cho giao tiếp thời gian thực
-
-### Công Nghệ Chính
-- Flask cho máy chủ web
-- Socket.IO cho giao tiếp thời gian thực
-- Google Generative AI cho xử lý ngôn ngữ tự nhiên
-- FAISS cho tìm kiếm tương đồng vector
-- PhoBERT cho hiểu ngôn ngữ tiếng Việt
-- SQLite cho lưu trữ dữ liệu
-
-## 📦 Cài Đặt và Chạy
-
-1. Clone repository:
+1. **Clone dự án:**
    ```bash
    git clone <repository-url>
-   cd <repository-name>
+   cd <repository-folder>
    ```
 
-2. Tạo và kích hoạt môi trường ảo:
+2. **Tạo và kích hoạt môi trường ảo:**
    ```bash
    python -m venv venv
-   # Trên Windows:
+   # Windows:
    venv\Scripts\activate
-   # Trên Unix/MacOS:
+   # Mac/Linux:
    source venv/bin/activate
    ```
 
-3. Cài đặt các thư viện cần thiết:
+3. **Cài đặt thư viện:**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Cấu hình biến môi trường trong file `.env`:
+4. **Tạo chỉ mục vector cho hình ảnh sản phẩm:**
+   ```bash
+   python search_engine/build_image_index.py
    ```
+   Lệnh này sẽ tạo vector store cho hình ảnh sản phẩm từ database, sử dụng để tìm kiếm sản phẩm tương tự.
+
+5. **Tạo file `.env` và điền các biến sau (tùy chỉnh nếu cần):**
+
+   ```env
+   # Cấu hình server
+   HOST=0.0.0.0
+   PORT=5000
+
+   # Đường dẫn database
+   DB_PATH=Database.db
+   DB_TIMEOUT=30
+
+   # Đường dẫn FAISS vector store
+   VECTOR_STORE_PATH=search_engine/vector_store
+   TOP_K_RESULTS=3
+
+   # Đường dẫn FAISS cho mô tả sản phẩm
+   DESCRIPTION_VECTOR_STORE_PATH=search_engine/description_store
+
+   # Cấu hình model
+   EMBEDDING_MODEL=vinai/phobert-base
+   LLM_MODEL=gemini-1.5-flash-latest
+   LLM_TEMPERATURE=0
+
+   # Cấu hình tìm kiếm ảnh
+   IMAGE_BATCH_SIZE=32
+   IMAGE_FAISS_INDEX_PATH=search_engine/image_index/index.faiss
+   IMAGE_FAISS_METADATA_PATH=search_engine/image_index/metadata.pkl
+
+   # Lịch sử chat
+   MAX_HISTORY_PER_USER=3
+
+   # API keys
    GOOGLE_API_KEY=your_google_api_key
    HUGGINGFACE_HUB_TOKEN=your_huggingface_token
+
+   # Flask secret key
+   FLASK_SECRET_KEY=your_flask_secret_key
    ```
 
-5. Khởi tạo cơ sở dữ liệu và vector store:
-   ```bash
-   python init_db.py
-   ```
+6. **Khởi tạo database (nếu chưa có):**
+   - Database sẽ tự động tạo khi chạy lần đầu. Nếu cần, hãy import dữ liệu mẫu vào `Database.db`.
 
-6. Chạy ứng dụng:
+7. **Chạy ứng dụng:**
    ```bash
    python app.py
    ```
@@ -85,47 +98,42 @@ Hệ thống trợ lý thông minh cho cửa hàng đồ uống, tích hợp xá
 ## 📁 Cấu Trúc Dự Án
 
 ```
-project/
-├── app.py                 # Ứng dụng Flask chính
-├── config.py             # Cấu hình hệ thống
-├── utils.py             # Các hàm tiện ích
-├── system/              # Hệ thống chính
-│   ├── face_auth.py     # Hệ thống xác thực khuôn mặt
-│   ├── rag_system.py    # Triển khai RAG
-│   ├── extract_info.py  # Phân tích hình ảnh
-│   └── prompts.py       # Các prompt hệ thống
-├── search_engine/       # Công cụ tìm kiếm
-│   ├── hybrid_search.py # Tìm kiếm lai
-│   ├── faiss_indexer.py # FAISS indexer
-│   └── feature_extractor.py # Trích xuất đặc trưng
-├── templates/           # Templates HTML
-├── vector_store/        # FAISS vector stores
-├── Database.db         # Cơ sở dữ liệu SQLite
-└── requirements.txt    # Các thư viện cần thiết
+├── app.py                # Flask app chính, định nghĩa endpoint và socket
+├── config.py             # Cấu hình hệ thống, biến môi trường
+├── utils.py              # Hàm tiện ích
+├── system/               # Các module lõi: xác thực khuôn mặt, RAG, phân tích ảnh
+├── search_engine/        # Tìm kiếm lai, FAISS, trích xuất đặc trưng ảnh
+├── models/               # Mô hình AI (ONNX, PhoBERT, ...)
+├── templates/            # HTML templates (auth, chat, register, ...)
+├── static/               # CSS, JS, ảnh tĩnh
+├── cus_img/              # Ảnh khuôn mặt khách hàng
+├── Database.db           # SQLite database
+├── requirements.txt      # Thư viện Python
+└── README.md
 ```
 
-## 🔌 API Endpoints
+## 🔌 Các API Endpoint
 
-- `/`: Giao diện chính
-- `/authenticate`: Xác thực khuôn mặt
-- `/chat`: Xử lý tin nhắn chat
-- `/process_image`: Phân tích hình ảnh
-- `/confirm_auth`: Xác nhận xác thực
-- `/register`: Đăng ký người dùng mới
+- `/` : Trang chính (chat, xác thực, đăng nhập)
+- `/authenticate` : Xác thực khuôn mặt
+- `/chat` : Xử lý chat AI
+- `/process_image` : Phân tích ảnh đồ uống
+- `/confirm_auth` : Xác nhận xác thực khuôn mặt
+- `/register` : Đăng ký khách hàng mới
+- `/logout` : Đăng xuất
 
 ## 🔒 Bảo Mật
 
-- API keys được lưu trữ an toàn trong biến môi trường
-- Face embeddings được lưu trữ bảo mật trong database
-- Ngăn chặn SQL injection thông qua kiểm tra truy vấn
-- Quản lý phiên an toàn
-- Giới hạn số lần thử xác thực
+- API key lưu trong biến môi trường, không commit lên git.
+- Embedding khuôn mặt lưu trong database, bảo mật.
+- Chống SQL injection, kiểm soát session.
+- Giới hạn số lần xác thực, quản lý truy cập.
 
 ## 🤝 Đóng Góp
 
-Mọi đóng góp và đề xuất cải tiến xin liên hệ
-- <a href="tranhoang0320@gmail.com">tranhoang0320@gmail.com</a>
-- <a href="trth.thanhue@gmail.com">trth.thanhue@gmail.com.com</a>
+Mọi ý kiến, đóng góp xin gửi về:
+- tranhoang0320@gmail.com
+- trth.thanhue@gmail.com
 
 ## 📄 Giấy Phép
 
@@ -133,7 +141,4 @@ Mọi đóng góp và đề xuất cải tiến xin liên hệ
 
 ## Tham khảo
 
-- InsightFace cho nhận dạng khuôn mặt
-- Google cho khả năng Generative AI
-- VinAI cho mô hình PhoBERT
-- Meta AI cho FAISS 
+- InsightFace, Google Generative AI, VinAI PhoBERT, Meta FAISS
