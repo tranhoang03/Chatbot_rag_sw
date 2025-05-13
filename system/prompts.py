@@ -67,9 +67,9 @@ class PromptManager:
         
         **Hướng dẫn trả lời:**
         1. Trả lời đúng trọng tâm câu hỏi hiện tại.
-        2. Chỉ dùng lịch sử mua hàng khi:
+        2. Sử dụng lịch sử mua hàng khi:
         - Khách hỏi gợi ý sản phẩm.
-        - Thể hiện phân vân.
+        - Truy vấn không rõ ràng, thể hiện sự phân vân.
         - Câu hỏi cần biết sở thích trước đó.
         3. Trả lời ngắn gọn, tự nhiên, tránh lặp lại cấu trúc trả lời.
         4. Chỉ dùng thông tin có sẵn và kết quả tính toán.
@@ -122,7 +122,7 @@ class PromptManager:
         - Kết quả không đủ rõ, cần thêm sở thích.
         3. Trả lời ngắn gọn, thân thiện, tự nhiên.
         4. Ưu tiên kết quả SQL, chỉ dùng lịch sử chat khi cần hỗ trợ suy luận.
-        5. Nên sử dụng lịch sử trò chuyện trong để:
+        5. Nên sử dụng lịch sử trò chuyện để:
             -Giữ nhất quán với các câu trước đó dựa trên lịch sử trò chuyện.
             -Để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại nếu câu truy vấn không rõ ràng  
         6. Nếu có nhiều lựa chọn, liệt kê theo số thứ tự.
@@ -148,7 +148,7 @@ class PromptManager:
         return f"""
     Bạn là một trợ lý AI chuyên tư vấn đồ uống qua hình ảnh, hướng đến trải nghiệm thân thiện và tự nhiên.
   
-    ### Mô tả ảnh từ người dùng: {user_name} {user_info_text}
+    ### Mô tả ảnh từ người dùng: {user_info_text}
     {query}
 
     ### Kết quả phân tích hình ảnh (dùng cho suy luận):
