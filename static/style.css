@@ -32,6 +32,57 @@ body {
     flex-shrink: 0;
 }
 
+/* Tùy chỉnh thanh cuộn */
+.sidebar::-webkit-scrollbar,
+.purchase-history::-webkit-scrollbar,
+.chat-history::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.purchase-history::-webkit-scrollbar-track,
+.chat-history::-webkit-scrollbar-track {
+    background-color: #181825;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.purchase-history::-webkit-scrollbar-thumb,
+.chat-history::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.purchase-history::-webkit-scrollbar-thumb:hover,
+.chat-history::-webkit-scrollbar-thumb:hover {
+    background-color: #444;
+}
+
+/* Mũi tên đầu thanh cuộn */
+.sidebar::-webkit-scrollbar-button:start:decrement,
+.purchase-history::-webkit-scrollbar-button:start:decrement,
+.chat-history::-webkit-scrollbar-button:start:decrement {
+    background: #333 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 16 16'><path fill='rgba(255,255,255,0.6)' d='M8 4 L14 10 L2 10 Z'/></svg>") no-repeat center;
+    height: 16px;
+    border-radius: 3px 3px 0 0;
+}
+
+/* Mũi tên cuối thanh cuộn */
+.sidebar::-webkit-scrollbar-button:end:increment,
+.purchase-history::-webkit-scrollbar-button:end:increment,
+.chat-history::-webkit-scrollbar-button:end:increment {
+    background: #333 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 16 16'><path fill='rgba(255,255,255,0.6)' d='M8 12 L14 6 L2 6 Z'/></svg>") no-repeat center;
+    height: 16px;
+    border-radius: 0 0 3px 3px;
+}
+
+/* Hover state cho mũi tên */
+.sidebar::-webkit-scrollbar-button:hover,
+.purchase-history::-webkit-scrollbar-button:hover,
+.chat-history::-webkit-scrollbar-button:hover {
+    background-color: #444;
+}
+
 .sidebar h3 {
     margin-top: 0;
     color: #facc15;
@@ -48,7 +99,7 @@ body {
 .sidebar div,
 .sidebar ul,
 .sidebar ol {
-    font-size: 0.85em;
+    font-size: 0.95em;
     line-height: 1.5;
     margin-bottom: 0.8rem;
 }
@@ -56,19 +107,16 @@ body {
 .sidebar strong {
     color: #f87171;
 }
+
 /* Lịch sử đơn hàng */
 .purchase-history {
     margin-top: 1rem;
     padding: 1rem;
-    background-color: #1e293b;
+    background-color: #181825;
+    border: 1px solid #333;
     border-radius: 8px;
     max-height: 300px;
     overflow-y: auto;
-}
-
-.purchase-history h4 {
-    color: #facc15;
-    margin-bottom: 0.75rem;
 }
 
 .purchase-history-item {
@@ -79,6 +127,11 @@ body {
     display: block !important;
 }
 
+.purchase-history-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
 .purchase-history-item strong {
     color: #f87171;
 }
@@ -87,9 +140,8 @@ body {
     display: block;
     color: #cbd5e1;
     margin-top: 0.2rem;
-    font-size: 0.85em;
+    font-size: 0.9em;
 }
-
 
 /* Nút Đăng xuất */
 .logout-button {
