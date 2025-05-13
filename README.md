@@ -58,8 +58,8 @@ Hệ thống trợ lý AI thông minh cho cửa hàng đồ uống, tích hợp 
 
 ### Bước 1: Clone Repository
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/tranhoang03/Chatbot_rag_sw.git
+cd Chatbot_rag_sw
 ```
 
 ### Bước 2: Thiết Lập Môi Trường
@@ -186,7 +186,7 @@ Mọi ý kiến, đóng góp xin gửi về:
 
 
 
-## 🙏 Cảm Ơn
+## Tham khảo
 
 - InsightFace cho công nghệ nhận diện khuôn mặt
 - Google Generative AI cho chatbot
