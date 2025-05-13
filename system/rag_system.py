@@ -392,7 +392,7 @@ class OptimizedRAGSystem:
 
             user_info = self._get_user_info(user_key)
             data_schema = self._get_database_schema()
-            recent_history_str = self.chat_history.get_recent_history(user_key)
+            recent_history_str = self.chat_history.get_latest_chat(user_key)
             purchase_history = get_purchase_history(user_key)
 
             prompt = self.tool_manager.create_tool_selection_prompt(
