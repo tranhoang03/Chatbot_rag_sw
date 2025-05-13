@@ -1,33 +1,25 @@
 # Hệ Thống Trợ Lý Cửa Hàng Đồ Uống Thông Minh
 
-Hệ thống trợ lý AI thông minh cho cửa hàng đồ uống, tích hợp nhiều tính năng hiện đại để nâng cao trải nghiệm khách hàng và tối ưu hóa quy trình kinh doanh.
+Hệ thống trợ lý AI thông minh cho cửa hàng đồ uống, tích hợp nhiều tính năng để nâng cao trải nghiệm khách hàng.
 
 ## 🌟 Tính Năng Chính
 
 ### 1. Xác Thực Khuôn Mặt
-- Đăng nhập không cần mật khẩu thông qua nhận diện khuôn mặt
-- Bảo mật cao với mã hóa embedding khuôn mặt
+- Đăng nhập thông qua nhận diện khuôn mặt
 - Tích hợp webcam realtime để xác thực nhanh chóng
 - Hỗ trợ đăng ký khuôn mặt mới cho khách hàng
 
-### 2. Chat AI Thông Minh
+### 2. Chatbot AI Thông Minh
 - Tương tác tự nhiên bằng tiếng Việt
 - Đề xuất đồ uống dựa trên sở thích và lịch sử
 - Hỗ trợ truy vấn thông tin sản phẩm
 - Tìm kiếm ngữ nghĩa trong lịch sử mua hàng
 - Tích hợp với Gemini AI cho phản hồi chính xác
 
-### 3. Nhận Dạng Hình Ảnh
+### 3. Tìm kiếm sản phẩm tương tự bằng hình ảnh
 - Phân tích và nhận diện đồ uống từ ảnh
-- Trích xuất thành phần và thông tin dinh dưỡng
 - Đề xuất sản phẩm tương tự dựa trên hình ảnh
 - Tìm kiếm sản phẩm bằng hình ảnh
-
-### 4. Quản Lý Khách Hàng
-- Lưu trữ thông tin cá nhân an toàn
-- Theo dõi lịch sử mua hàng
-- Phân tích sở thích và hành vi
-- Cá nhân hóa trải nghiệm mua sắm
 
 ## 🛠 Công Nghệ Sử Dụng
 
