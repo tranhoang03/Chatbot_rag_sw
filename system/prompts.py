@@ -21,10 +21,9 @@ class PromptManager:
         4. Dùng WHERE cho điều kiện lọc.
         5. Dùng ORDER BY cho sắp xếp.
         6. Dùng JOIN hợp lý khi cần.
-        7. Không giả định dữ liệu không tồn tại.
-        8. Chỉ áp dụng điều kiện WHERE cho các cột bắt buộc như tên danh mục hoặc tên sản phẩm,...
+        7. Chỉ áp dụng điều kiện WHERE cho các cột bắt buộc như tên danh mục hoặc tên sản phẩm,...
             Với các cột mô tả bổ sung như Calories, Sugar, Fat, Protein,,.. chỉ sử dụng để ưu tiên hoặc sắp xếp kết quả nếu dữ liệu tồn tại, nhưng không ép điều kiện lọc.
-        9. Nếu câu hỏi là tiếng Việt, bạn NÊN DỊCH các từ khóa liên quan (như tên sản phẩm hoặc danh mục) sang tiếng Anh để mở rộng điều kiện lọc, giúp truy vấn bao quát hơn mà vẫn giữ nguyên ý nghĩa.
+        8. Nếu câu hỏi là tiếng Việt, bạn NÊN DỊCH các từ khóa liên quan (như tên sản phẩm hoặc danh mục) sang tiếng Anh để mở rộng điều kiện lọc, giúp truy vấn bao quát hơn mà vẫn giữ nguyên ý nghĩa.
             Ví dụ: Nếu khách hàng hỏi "cà phê nào có giá dưới 25000", bạn có thể viết truy vấn như sau mà không ảnh hưởng đến kết quả gốc:
             Câu lệnh gốc:
             SELECT p.Name, p.Price FROM Product p JOIN Categories c ON p.Categories_id = c.Id 
@@ -32,12 +31,12 @@ class PromptManager:
             Câu lệnh sau khi mở rộng điều kiện:
             SELECT p.Name, p.Price FROM Product p JOIN Categories c ON p.Categories_id = c.Id 
             WHERE (c.Name LIKE '%Cà phê%' OR c.Name LIKE '%Coffee%') AND p.Price < 25000
-        10. Mở rộng truy vấn để cung cấp thông tin đầy đủ và giàu giá trị phân tích hơn: Ví dụ: Nếu khách hỏi giá của đồ uống Coffe thì ngoài giá có thể SELECT thêm các trường liên quan như Tên, Mô tả, ...
-        11. Tham khảo lịch sử trò chuyện gần nhất để hiểu rõ hơn ngữ cảnh của câu hỏi hiện tại.
+        9. Mở rộng truy vấn để cung cấp thông tin đầy đủ và giàu giá trị phân tích hơn: Ví dụ: Nếu khách hỏi giá của đồ uống Coffe thì ngoài giá có thể SELECT thêm các trường liên quan như Tên, Mô tả, ...
         **Quy tắc:**
         - CHỈ trả về truy vấn SQL hợp lệ mà không kèm giải thích.
         - KHÔNG dùng Markdown code block hoặc comment.
         - TRUY VẤN phải chạy được trên SQLite.
+        - Nếu không có điều kiện lọc cụ thể, hãy mặc định giới hạn kết quả trả về: `LIMIT 10`.
         """
 
     @staticmethod
@@ -123,7 +122,7 @@ class PromptManager:
         - Kết quả không đủ rõ, cần thêm sở thích.
         3. Trả lời ngắn gọn, thân thiện, tự nhiên.
         4. Ưu tiên kết quả SQL, chỉ dùng lịch sử chat khi cần hỗ trợ suy luận.
-                5. Nên sử dụng lịch sử trò chuyện trong để:
+        5. Nên sử dụng lịch sử trò chuyện trong để:
             -Giữ nhất quán với các câu trước đó dựa trên lịch sử trò chuyện.
             -Để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại nếu câu truy vấn không rõ ràng  
         6. Nếu có nhiều lựa chọn, liệt kê theo số thứ tự.
