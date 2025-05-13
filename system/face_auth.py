@@ -8,7 +8,7 @@ from insightface.model_zoo import get_model
 from insightface.model_zoo.arcface_onnx import ArcFaceONNX
 from insightface.utils.face_align import norm_crop
 from insightface.app.common import Face
-BASE_DIR = Path(os.path.dirname(__file__)).parent  # Adjust this to your project structure
+BASE_DIR = Path(os.path.dirname(__file__)).parent  
 
 class DetectedFace:
     def __init__(self, bbox, landmarks=None, confidence=None):
