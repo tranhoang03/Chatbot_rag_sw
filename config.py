@@ -40,7 +40,7 @@ class Config:
     
     # Model configuration
     embedding_model: str = os.getenv("EMBEDDING_MODEL", "vinai/phobert-base")
-    _model: str = os.getenv("LLM_MODEL", "gemini-1.5-flash-latest")
+    llm_model: str = os.getenv("LLM_MODEL", "gemini-1.5-flash-latest")
     llm_temperature: float = float(os.getenv("LLM_TEMPERATURE", 0))
     
     # Image search configuration
