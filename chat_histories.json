@@ -46,9 +46,84 @@
   ],
   "71": [
     {
-      "timestamp": "2025-04-28T09:06:53.172052",
+      "timestamp": "2025-05-19T17:46:54.875180",
+      "query": "tôi muốn uống gì đó ngon ngọt mát",
+      "response": "Chào anh Hoàng! Anh muốn uống gì đó ngon, ngọt và mát phải không ạ?  Em thấy anh rất thích Java Chip Frappuccino và Caffè Latte trước đây.  Vậy nên em gợi ý anh hai lựa chọn này:\n\n1. **Caramel Frappuccino:**  Đây là sự kết hợp giữa cà phê espresso, sữa, đá xay và siro caramel, tạo nên vị ngọt ngào, béo ngậy và mát lạnh.  Rất phù hợp với sở thích của anh.\n\n2.  Nếu anh muốn thử gì đó không phải cà phê, thì  **Tazo Chai Tea Latte** cũng là một lựa chọn tuyệt vời.  Đây là trà đen kết hợp với các loại gia vị như quế, gừng, thảo quả và sữa tươi, tạo nên hương vị cay ấm, nhẹ nhàng và thanh khiết.  Nó sẽ rất ngon và mát mẻ.\n\nAnh muốn thử loại nào ạ?  Nếu vẫn chưa quyết định, anh có thể cho em biết anh thích vị ngọt nhiều hay ít, hoặc có thích hương vị trà hay cà phê hơn không để em tư vấn chính xác hơn nhé!"
+    },
+    {
+      "timestamp": "2025-05-19T17:47:15.181792",
+      "query": "giá loại 1 mà bạn vừa nêu",
+      "response": "Chào anh Hoàng!  Rất tiếc, hiện tại hệ thống chưa cập nhật giá cho Tazo Chai Tea Latte.  Anh có thể cho em biết anh muốn thêm thông tin gì khác về loại trà này không ạ? Ví dụ như thành phần, lượng calo hay cách thức phục vụ?  Hoặc anh có muốn em gợi ý thêm một số loại đồ uống khác không ạ?"
+    },
+    {
+      "timestamp": "2025-05-19T17:47:38.913781",
+      "query": "Tôi nghĩ cửa hàng phải có giá chứ?",
+      "response": "Chào anh Hoàng!\n\nDạ, cửa hàng chúng em có đầy đủ giá cả các loại đồ uống.  Dựa trên kết quả tìm kiếm, giá của các sản phẩm như sau:\n\n1. Java Chip Frappuccino: 38.000 VNĐ (có tại Store 9 và Store 18)\n2. Mocha Light Frappuccino: 40.000 VNĐ (có tại Store 1)\n3. Tazo Green Tea Latte: 33.000 VNĐ (có tại Store 1)\n4. Vanilla Latte: 40.000 VNĐ (có tại Store 16)\n\n\nAnh muốn biết giá của sản phẩm nào khác không ạ?  Hoặc anh muốn biết giá tại cửa hàng cụ thể nào không ạ?"
+    }
+  ],
+  "73": [
+    {
+      "timestamp": "2025-04-28T14:58:53.250285",
       "query": "tôi khát",
-      "response": "Anh đang khát nước đúng không ạ?  Vậy thì em gợi ý vài lựa chọn nhé:\n\n1. *Cà phê đen*:  Nếu anh muốn một thức uống đậm đà, giúp tỉnh táo.\n2. *Trà ủ lạnh chanh*:  Món này sẽ rất giải khát, vị chua ngọt dễ chịu, đặc biệt phù hợp với ngày hè nóng bức.\n3. *Trà Tazo Chai Latte*:  Nếu anh thích một thức uống ấm áp, thơm nhẹ nhàng, vị ngọt dịu.\n\n\nAnh từng mua *Java Chip Frappuccino Soymilk* và *Brewed Coffee Venti*,  nhưng đánh giá có vẻ không cao lắm.  Anh có muốn thử những loại khác không ạ?  Hay anh muốn cho em biết thêm sở thích để em tư vấn chính xác hơn?"
+      "response": "Chị Huệ vẫn chưa quyết định được đúng không ạ?  Em thấy chị từng rất thích Cà phê đen (đánh giá 5 sao!), vậy nên em nghĩ chị có thể thử lại hoặc nếu muốn đổi vị, thì  Shaken Iced Tazo Tea Lemonade hoặc Tazo Chai Tea Latte cũng là những lựa chọn rất ngon.  Chị muốn nghe thêm thông tin về loại nào không ạ?"
+    },
+    {
+      "timestamp": "2025-04-28T14:59:33.930581",
+      "query": "nóng quá",
+      "response": "Chị Huệ ơi, trời nóng thế này thì em thấy  Shaken Iced Tazo Tea Lemonade hoặc Shaken Iced Tazo Tea là lựa chọn tuyệt vời để giải nhiệt đấy ạ!  Cả hai đều là trà ủ lạnh, rất mát.  Chị thích vị chanh không ạ? Nếu thích, thì Shaken Iced Tazo Tea Lemonade sẽ hợp hơn.  Còn nếu không, thì Shaken Iced Tazo Tea vẫn rất ngon.  Em thấy chị rất thích cà phê đen (đánh giá 5 sao luôn!), nhưng nếu muốn thử gì đó mới lạ thì đây là 2 gợi ý khá tốt đó ạ!"
+    },
+    {
+      "timestamp": "2025-04-28T15:01:37.760009",
+      "query": "tôi từng mua gì",
+      "response": "Chào chị Huệ!  Dạ, chị đã từng mua những món này:\n\n1. Caramel Apple Spice (45.000đ):  Hương vị táo và caramel,  kích cỡ Venti, 360 calo, 83g đường, không có protein.\n2. Java Chip Frappuccino (38.000đ):  Hương vị Java Chip, có 3 lựa chọn kích cỡ với sữa tươi nguyên kem, calo và đường khác nhau.  Lựa chọn 1: 240 calo, 44g đường, 4g protein. Lựa chọn 2: 340 calo, 62g đường, 5g protein. Lựa chọn 3: 460 calo, 84g đường, 7g protein.\n3. Tazo Green Tea Latte (33.000đ): Trà xanh Tazo với sữa không béo, kích cỡ Tall, 210 calo, 41g đường, 11g protein.\n\n\nChị có muốn biết thêm thông tin về món nào không ạ?  Hoặc nếu chị muốn tìm hiểu thêm về các sản phẩm khác, em rất sẵn lòng hỗ trợ chị!"
+    }
+  ],
+  "75": [
+    {
+      "timestamp": "2025-04-28T16:14:33.578457",
+      "query": "Socola, sữa , màu Nâu đậm ,đựng trong Ly thủy tinh chân đế, Kem tươi, siro chocolate.Thời tiết lạnh, mùa đông",
+      "response": "Chào anh Mai Đức Đạt!  Dựa trên hình ảnh, em thấy anh có thể thích những loại đồ uống sau đây:\n\n1. **Vanilla Bean:** Giá 40.000đ\n2. **Java Chip Frappuccino:** Giá 38.000đ\n3. **Caramel Frappuccino:** Giá 32.000đ\n\n\nĐể em tư vấn chính xác hơn, anh có thể cho em biết anh thích vị ngọt hay đắng, hay muốn đồ uống có thêm topping gì không ạ?\n\n\nNgoài ra, anh có thể muốn thử thêm một số loại đồ uống khác nữa không ạ?"
+    },
+    {
+      "timestamp": "2025-04-28T16:18:40.388715",
+      "query": "Trà Matcha, sữa, đá , màu Màu xanh lá cây nhạt ,đựng trong Cốc nhựa có nắp đậy,.Thích hợp cho những người yêu thích trà xanh, dùng làm thức uống giải khát",
+      "response": "Chào anh Mai Đức Đạt!  Dựa trên ảnh và kết quả phân tích, em thấy anh có thể thích những đồ uống này:\n\n1. **Tazo Green Tea Latte:** Giá 33.000đ.  Đây là một lựa chọn phù hợp nếu anh thích trà xanh.\n\n2. **Shaken Iced Tazo Tea Lemonade:** Giá 35.000đ. Nếu anh muốn một thức uống trà xanh mát lạnh hơn.\n\nAnh muốn biết thêm thông tin về các sản phẩm này không ạ?  Ví dụ như thành phần cụ thể?\n\n\nNgoài ra, anh có thể muốn thử thêm Orange Mango Banana Smoothie (60.000đ) không ạ?  Đây là một lựa chọn khác khá thú vị đấy!"
+    },
+    {
+      "timestamp": "2025-04-28T16:21:20.172379",
+      "query": "thích sinh tố thì hợp với món gì trong số đó?",
+      "response": "Nếu bạn thích sinh tố, thì  \"Orange Mango Banana Smoothie\" là một lựa chọn tuyệt vời.  Đây là sự kết hợp của cam, xoài và chuối tươi xay nhuyễn với đá, rất phù hợp cho những ngày hè nóng nực."
+    }
+  ],
+  "76": [
+    {
+      "timestamp": "2025-04-28T16:43:12.502412",
+      "query": "có trà không",
+      "response": "Vâng, cửa hàng chúng tôi có trà.  Cụ thể, có các loại đồ uống được làm từ trà trong danh mục \"Shaken Iced Beverages\".  Tuy nhiên, thông tin chi tiết về các loại trà cụ thể thì chưa được cung cấp. Anh có muốn tìm hiểu thêm về các loại đồ uống trong danh mục này không ạ?"
+    },
+    {
+      "timestamp": "2025-04-28T16:43:35.535320",
+      "query": "Trà Matcha, sữa, đá , màu Màu xanh lá nhạt, hơi ngả vàng ,đựng trong Ly thủy tinh cao,.Những người thích trà xanh, đồ uống giải khát mùa hè",
+      "response": "Chào anh Nguyễn Tiến Lợi!  Dựa trên hình ảnh, em thấy có một vài gợi ý đồ uống anh có thể thích:\n\n1. **Tazo Green Tea Latte:** Giá 33.000đ\n2. **Shaken Iced Tazo Tea Lemonade:** Giá 35.000đ\n3. **Shaken Iced Tazo Tea:** Giá 35.000đ\n\n\nAnh muốn tìm hiểu thêm về sản phẩm nào không ạ?  \n\nNgoài ra, anh có thể tham khảo thêm các loại đồ uống khác nữa nhé!"
+    },
+    {
+      "timestamp": "2025-04-28T16:44:02.660492",
+      "query": "cho tôi thông tin các loại cà phê",
+      "response": "Chào anh Lợi!  Chúng tôi có một số loại cà phê như sau:\n\n1. **Cà phê đen truyền thống:** Được pha chế từ những hạt cà phê chất lượng cao, mang đến hương vị thuần khiết và lượng caffeine như ý cho ngày mới tràn đầy năng lượng.\n\n2. **Frappuccino Blended Coffee:** Sự kết hợp hoàn hảo giữa cà phê đá xay mát lạnh cùng các lớp hương vị đa dạng, phủ béo ngậy trên bề mặt - lựa chọn lý tưởng cho những ngày nóng bức.\n\n3. **Frappuccino Light Blended Coffee:** Phiên bản ít calo của Frappuccino truyền thống, giữ nguyên hương vị thơm ngon nhưng giảm lượng đường và chất béo, phù hợp cho chế độ ăn uống lành mạnh.\n\n\nAnh muốn tìm hiểu thêm về loại cà phê nào không ạ?  Ví dụ như, anh thích cà phê đậm đà hay nhẹ nhàng hơn?  Hoặc anh có yêu cầu gì đặc biệt về hương vị không?"
+    }
+  ],
+  "80": [
+    {
+      "timestamp": "2025-05-13T17:00:01.663945",
+      "query": "Sữa, cà phê , màu Màu nâu nhạt với lớp bọt sữa màu trắng ở trên cùng ,đựng trong Ly thủy tinh hình dáng cao, có quai cầm, Lớp bọt sữa.Thưởng thức vào buổi sáng hoặc chiều, trong không gian thư giãn",
+      "response": "Chào Anh Sang!  Dựa trên hình ảnh, em thấy có một vài gợi ý đồ uống cho anh nè:\n\n1. **Hot Chocolate:** Giá 35.000đ\n\n2. **Espresso:** Giá 20.000đ\n\n3. **Vanilla Bean:** Giá 40.000đ\n\n\nAnh muốn biết thêm thông tin chi tiết về món nào không ạ?  Ví dụ như thành phần, cách pha chế,...\n\n\nNgoài ra, anh có thể muốn thử thêm một số loại đồ uống khác nữa không ạ?"
+    }
+  ],
+  "81": [
+    {
+      "timestamp": "2025-05-13T20:40:42.445545",
+      "query": "hello",
+      "response": "Lỗi hệ thống khi xử lý yêu cầu: Invalid argument provided to Gemini: 400 API key not valid. Please pass a valid API key. [reason: \"API_KEY_INVALID\"\ndomain: \"googleapis.com\"\nmetadata {\n  key: \"service\"\n  value: \"generativelanguage.googleapis.com\"\n}\n, locale: \"en-US\"\nmessage: \"API key not valid. Please pass a valid API key.\"\n]"
     }
   ]
 }
