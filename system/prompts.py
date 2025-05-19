@@ -119,7 +119,7 @@ class PromptManager:
         1. Trả lời trực tiếp dựa trên kết quả SQL.
         2. Chỉ dùng lịch sử mua hàng nếu:
         - Khách hỏi gợi ý đồ uống.
-        - Phân vân chưa chọn được.
+        - Phân vân chưa chọn được đồ uống.
         - Kết quả không đủ rõ, cần thêm sở thích.
         3. Trả lời ngắn gọn, thân thiện, tự nhiên.
         4. Ưu tiên kết quả SQL, chỉ dùng lịch sử chat khi cần hỗ trợ suy luận.
