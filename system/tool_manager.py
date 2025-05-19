@@ -51,21 +51,25 @@ class ToolManager:
         
         prompt = f"""
         Bạn là một trợ lý AI chuyên nghiệp. Nhiệm vụ của bạn là phân tích yêu cầu của người dùng và chọn CÔNG CỤ (TOOL) phù hợp nhất để trả lời.
-        Dựa vào câu hỏi hiện tại và lịch sử trò chuyện, hãy quyết định xem nên sử dụng công cụ nào trong số các công cụ được cung cấp.
+       
               
-        Thông tin người dùng : {user_info}
-        Lịch sử trò chuyện gần đây:
+        **Lịch sử trò chuyện gần đây:**
         {recent_history_str}
 
-        Câu hỏi của người dùng: {query}
-
-        Hai công cụ bạn có thể sử dụng:
+        **Câu hỏi của người dùng:** {query}
+        
+        **Hai công cụ bạn có thể sử dụng:**
         {tools_list_str}
 
-        Cơ sở dữ liệu:
+        **Cơ sở dữ liệu**:
         {data_schema}
-
-        Hãy chọn MỘT công cụ DUY NHẤT phù hợp nhất để trả lời câu hỏi này. 
+        **HƯỚNG DẪN**: 
+        1. Nên xem xét câu hỏi của người dùng có liên quan trực tiếp đến lịch sử chat trước đó không để quyết định.
+        2. Nếu câu hỏi không rõ ràng nhưng có liên quan đến lần chat trước đó thì HÃY sử dụng "Lịch sử trò chuyện gần nhất" và "Câu hỏi của người dùng" để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại để chọn công cụ thích hợp
+        3. Trong trường hợp câu hỏi không rõ ràng và cũng không liên quan đến lịch sử chat trước đó thì chọn công cụ phù hợp với câu hỏi hiện tại.
+        **Yêu cầu**:
+        1. Hãy chọn MỘT công cụ DUY NHẤT phù hợp nhất để trả lời câu hỏi này. 
+        2. Không được trả về **additional_kwargs** rỗng. HOẶC Content sử dụng tool nào thì phải trả về tool đó.
         """
         return prompt.strip()
 
