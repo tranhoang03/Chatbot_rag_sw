@@ -32,7 +32,7 @@ config = Config()
 rag_system = OptimizedRAGSystem(config)
 client_auth_transformers = {}
 
-# Khởi tạo dịch vụ giọng nói
+
 voice_service = VoiceService()
     
 logging.basicConfig(level=logging.DEBUG)
