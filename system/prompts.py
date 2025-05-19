@@ -4,7 +4,7 @@ class PromptManager:
     @staticmethod
     def get_sql_generation_prompt(query: str, schema_info: str, history: str = "") -> str:
         return f"""
-        Bạn là trợ lý thông minh chuyên chuyển đổi câu hỏi tự nhiên thành truy vấn SQL đúng cú pháp trên SQLite.
+        Bạn là trợ lý thông minh chuyên chuyển đổi ngôn ngữ tự nhiên thành truy vấn SQL đúng cú pháp trên SQLite.
 
         Câu hỏi: "{query}"
         Schema: {schema_info}
@@ -12,8 +12,9 @@ class PromptManager:
         **Lịch sử trò chuyện gần nhất:**
         {history}
         **Hướng dẫn**
-        1. Ưu tiên tạo truy vấn SQL dựa trên câu hỏi khách hànghàng
-        2. Trong trường hợp câu hỏi không rõ ràng HÃY sử dụng "Lịch sử trò chuyện gần nhất" Để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại 
+        1. Hãy xác định xem câu hỏi hiện tại có liên quan đến lịch sử trò chuyện gần nhất hay không trước khi tạo truy vấn SQL.
+            - Tạo truy vấn SQL dựa trên câu hỏi khách hàng nếu câu hỏi rõ ràng
+            - Nếu câu hỏi không rõ ràng nhưng có liên quan đến lần chat trước đó thì HÃY sử dụng "Lịch sử trò chuyện gần nhất" và "Câu hỏi của người dùng" để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại và tạo SQL thích hợp.
         **Yêu cầu:**
         1. Chỉ sử dụng các bảng và cột có trong schema.
         2. Chỉ tạo truy vấn SELECT.
@@ -141,7 +142,7 @@ class PromptManager:
         """
 
     @staticmethod
-    def get_image_upload_prompt(context: list, query: str, history: str, user_info: dict) -> str:
+    def get_image_upload_prompt(context : list, query: str, history: str, user_info: dict) -> str:
         user_name = user_info.get('name', 'Khách hàng ẩn danh') if user_info else 'Khách hàng ẩn danh'
         user_info_text = f"Thông tin người dùng: {user_info}" if user_info else ""
 
