@@ -12,7 +12,7 @@
             <div class="sidebar" id="sidebar">
                 <!-- Sidebar Toggle Button -->
                 <button id="sidebar-toggle">☰</button> <br>
-                
+
                 <!-- Phần thông tin người dùng -->
                 <div class="sidebar-user-section">
                     {% if user_info %}
@@ -24,7 +24,7 @@
                                 <p style="font-size: 0.95em; color: #cbd5e1; margin: 0.5rem 0 0 0;">Số đơn hàng: <strong>{{ purchase_history|length }}</strong></p>
                             {% endif %}
                         </div>
-                        
+
                         <h3><span style="font-size: 0.95em;">🛍️</span> Lịch sử mua hàng</h3>
                         <div class="purchase-history">
                             {% if purchase_history %}
@@ -53,7 +53,7 @@
                         <button class="logout-button">🚪 Đăng xuất</button>
                     </a>
                 </div>
-                
+
                 <!-- Phần thông tin thêm -->
                 <div class="sidebar-info-section">
                     <hr style="border-color: #444; margin: 0.8rem 0;">
@@ -72,7 +72,7 @@
                     <ol style="font-size: 0.85em;">
                         <li>💬 Nhập câu hỏi hoặc yêu cầu vào ô chat.</li>
                         <li>➡️ Nhấn <b>Gửi</b> hoặc <b>Enter</b> để gửi.</li>
-                        <li>🖼️ Tải ảnh lên bằng nút 
+                        <li>🖼️ Tải ảnh lên bằng nút
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="vertical-align: middle; margin-bottom: 2px;" viewBox="0 0 16 16">
                               <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                               <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
@@ -96,7 +96,7 @@
                     <div class="chat-message assistant-message">
                         <p>Xin chào {{ user_info.name if user_info else 'bạn' }}! Tôi có thể giúp gì cho bạn?</p>
                     </div>
-                 
+
                 </div>
 
                 <!-- Input Area -->
@@ -110,6 +110,25 @@
                           <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
                         </svg>
                     </button>
+                    <button id="mic-button" title="Chat bằng giọng nói">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                          <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
+                          <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0v5zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3z"/>
+                        </svg>
+                    </button>
+                    <div class="voice-dropdown">
+                        <button id="voice-settings-button" title="Cài đặt giọng nói">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                            </svg>
+                        </button>
+                        <div id="voice-dropdown-content" class="voice-dropdown-content">
+                            <div style="font-weight: bold; padding: 5px; border-bottom: 1px solid #ddd;">Giọng đọc:</div>
+                            <div class="voice-option" onclick="changeVoice('huyen')">Nữ</div>
+                            <div class="voice-option" onclick="changeVoice('khanhlq')">Nam</div>
+                        </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,13 +140,34 @@
 
             const imageUpload = document.getElementById('image-upload');
             const uploadButton = document.getElementById('upload-button');
-            
+            const micButton = document.getElementById('mic-button');
+
+            // Biến để lưu trữ đối tượng nhận dạng giọng nói
+            let recognition = null;
+            // Biến để kiểm tra xem trình duyệt có hỗ trợ Web Speech API không
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            // Biến để lưu trữ trạng thái đang ghi âm
+            let isRecording = false;
+            // Biến để lưu trữ trạng thái đang phát âm thanh
+            let isPlaying = false;
+            // Biến để lưu trữ đối tượng âm thanh
+            let audioContext = null;
+            let audioSource = null;
+            // Giọng đọc mặc định
+            let currentVoice = "huyen";
+            // Biến để theo dõi xem người dùng đang sử dụng chế độ nhập giọng nói hay không
+            // Mặc định là false (không sử dụng giọng nói)
+            let voiceInputMode = false;
+
+            // Log trạng thái ban đầu
+            console.log("Trạng thái ban đầu: voiceInputMode =", voiceInputMode);
+
             function addMessage(role, content) {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('chat-message');
                 messageDiv.classList.add(role === 'user' ? 'user-message' : 'assistant-message');
 
-         
+
                 content = content.replace(/\(?(https?:\/\/[^\s]+)\)?/g, '<a href="$1" target="_blank" style="color: inherit;">$1</a>');
                 // Render newlines as <br>
                 content = content.replace(/\n/g, '<br>');
@@ -143,49 +183,49 @@
                 messageDiv.classList.add('chat-message');
                 messageDiv.classList.add(role === 'user' ? 'user-message' : 'assistant-message');
                 messageDiv.classList.add('image-message');
-                
+
                 const imgContainer = document.createElement('div');
                 imgContainer.style.width = '240px';
                 imgContainer.style.height = '240px';
                 imgContainer.style.overflow = 'hidden';
-                
+
                 const img = document.createElement('img');
                 img.src = imageDataUrl;
                 img.alt = "Uploaded Image";
                 // Let CSS handle the dimensions and styling
-                
+
                 imgContainer.appendChild(img);
                 messageDiv.appendChild(imgContainer);
                 chatHistory.appendChild(messageDiv);
-                chatHistory.scrollTop = chatHistory.scrollHeight; 
+                chatHistory.scrollTop = chatHistory.scrollHeight;
             }
 
             function displayProductImages(productImages) {
                 if (!productImages || Object.keys(productImages).length === 0) {
                     return; // No product images to display
                 }
-                
+
                 // Create a standard assistant message specifically for products
                 const productsDiv = document.createElement('div');
                 productsDiv.classList.add('chat-message', 'assistant-message', 'product-message');
-                
+
                 // Create title row that will contain the bot icon and product title
                 const titleRow = document.createElement('div');
                 titleRow.classList.add('title-row');
-                
+
                 // Add a title for the products section
                 const titleElem = document.createElement('strong');
                 titleElem.textContent = 'Sản phẩm được đề cập:';
                 titleElem.classList.add('product-title');
-                    
+
                 // Add the title row to the message
                 titleRow.appendChild(titleElem);
                 productsDiv.appendChild(titleRow);
-                
+
                 // Create a grid container for products
                 const gridContainer = document.createElement('div');
                 gridContainer.classList.add('product-grid');
-                
+
                 // Add special class based on number of products for balanced layout
                 const productCount = Object.keys(productImages).length;
                 if (productCount === 1) {
@@ -193,7 +233,7 @@
                 } else if (productCount === 2) {
                     gridContainer.classList.add('grid-2-items');
                 }
-                
+
                 // Add each product with its image in the original order
                 for (const product of productImages) {
                     const productCard = document.createElement('div');
@@ -219,15 +259,266 @@
                 }
 
 
-                
+
                 productsDiv.appendChild(gridContainer);
                 chatHistory.appendChild(productsDiv);
                 chatHistory.scrollTop = chatHistory.scrollHeight;
             }
 
+
+
+            sendButton.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+
+
+
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('sidebar-collapsed');
+
+                sidebarToggle.textContent = sidebar.classList.contains('sidebar-collapsed') ? '☰' : '✕';
+            });
+
+
+            userInput.focus();
+
+            uploadButton.addEventListener('click', () => {
+                imageUpload.click();
+            });
+
+            imageUpload.addEventListener('change', async () => {
+                const file = imageUpload.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        const imageDataUrl = e.target.result;
+                        addImageMessage('user', imageDataUrl);
+
+
+                        const processingMsgDiv = addMessage('assistant', '<i>Đang xử lý ảnh...</i>');
+                        processingMsgDiv.id = 'image-processing-indicator';
+
+                        const formData = new FormData();
+                        formData.append('image', file);
+                        await processImageBackend(formData);
+                    }
+                    reader.readAsDataURL(file);
+                }
+
+                 imageUpload.value = null;
+            });
+
+            async function processImageBackend(formData) {
+                try {
+                    // Lưu trạng thái hiện tại của voiceInputMode để sử dụng sau khi nhận phản hồi
+                    const currentVoiceMode = voiceInputMode;
+                    console.log("Trạng thái voiceInputMode khi xử lý hình ảnh:", currentVoiceMode);
+
+                    const response = await fetch("{{ url_for('process_image') }}", {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+
+                    const indicator = document.getElementById('image-processing-indicator');
+                    if (indicator) {
+                        chatHistory.removeChild(indicator);
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`Lỗi ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    const messageDiv = addMessage('assistant', result.content);
+
+                    // Chỉ phát âm thanh khi ở chế độ nhập giọng nói
+                    if (result.content && currentVoiceMode) {
+                        console.log("Đang phát âm thanh cho hình ảnh (chế độ giọng nói)");
+                        textToSpeech(result.content);
+                    } else if (result.content) {
+                        console.log("Không phát âm thanh cho hình ảnh vì không ở chế độ nhập giọng nói");
+                    }
+
+                    // Đặt lại voiceInputMode sau khi xử lý phản hồi
+                    voiceInputMode = false;
+
+                    // Display product images if available
+                    if (result.product_images) {
+                        displayProductImages(result.product_images);
+                    }
+                } catch (error) {
+
+                    const indicator = document.getElementById('image-processing-indicator');
+                    if (indicator) {
+                        chatHistory.removeChild(indicator);
+                    }
+                    console.error('Error processing image:', error);
+                    addMessage('assistant', '⚠️ Xin lỗi, đã có lỗi xảy ra khi xử lý hình ảnh.');
+                }
+            }
+
+            // Xử lý reload trang
+            window.addEventListener('beforeunload', function() {
+                fetch('/reset_session');
+            });
+
+            // Khởi tạo Web Speech API
+            function initSpeechRecognition() {
+                if (!SpeechRecognition) {
+                    console.error("Trình duyệt của bạn không hỗ trợ Web Speech API");
+                    micButton.style.display = "none";
+                    return;
+                }
+
+                recognition = new SpeechRecognition();
+                recognition.lang = 'vi-VN';  // Đặt ngôn ngữ là tiếng Việt
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onstart = function() {
+                    isRecording = true;
+                    micButton.classList.add('recording');
+                    console.log("Bắt đầu ghi âm...");
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    userInput.value = transcript;
+                    console.log("Đã nhận dạng: " + transcript);
+                };
+
+                recognition.onerror = function(event) {
+                    console.error("Lỗi nhận dạng giọng nói: " + event.error);
+                    stopRecording();
+                };
+
+                recognition.onend = function() {
+                    stopRecording();
+                    // Tự động gửi tin nhắn sau khi nhận dạng giọng nói
+                    if (userInput.value.trim() !== '') {
+                        console.log("Đã nhận dạng giọng nói, gửi tin nhắn");
+                        sendMessage();
+                    }
+                };
+            }
+
+            // Bắt đầu ghi âm
+            function startRecording() {
+                if (!recognition) {
+                    initSpeechRecognition();
+                }
+
+                if (recognition) {
+                    try {
+                        // Đặt chế độ nhập giọng nói thành true
+                        voiceInputMode = true;
+                        console.log("Đã bật chế độ nhập giọng nói, voiceInputMode =", voiceInputMode);
+                        recognition.start();
+                    } catch (e) {
+                        console.error("Lỗi khi bắt đầu ghi âm: ", e);
+                    }
+                }
+            }
+
+            // Dừng ghi âm
+            function stopRecording() {
+                if (recognition) {
+                    try {
+                        recognition.stop();
+                    } catch (e) {
+                        console.error("Lỗi khi dừng ghi âm: ", e);
+                    }
+                }
+                isRecording = false;
+                micButton.classList.remove('recording');
+            }
+
+            // Chuyển đổi văn bản thành giọng nói
+            async function textToSpeech(text) {
+                try {
+                    console.log(`Đang chuyển đổi văn bản thành giọng nói với giọng ${currentVoice}...`);
+                    console.log(`Nội dung: "${text.substring(0, 100)}${text.length > 100 ? '...' : ''}"`);
+
+                    const response = await fetch("{{ url_for('text_to_speech') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            text: text,
+                            voice: currentVoice
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Lỗi ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    if (!data.audio) {
+                        throw new Error("Không nhận được dữ liệu âm thanh từ server");
+                    }
+
+                    console.log("Đã nhận dữ liệu âm thanh, đang chuẩn bị phát...");
+
+                    // Tạo một audio element để phát âm thanh
+                    const audio = new Audio(`data:audio/mp3;base64,${data.audio}`);
+
+                    // Phát âm thanh
+                    isPlaying = true;
+                    audio.play();
+
+                    audio.onended = function() {
+                        isPlaying = false;
+                        console.log("Phát âm thanh hoàn tất");
+                    };
+
+                    audio.onerror = function(e) {
+                        isPlaying = false;
+                        console.error("Lỗi khi phát âm thanh:", e);
+                    };
+
+                } catch (error) {
+                    console.error('Lỗi khi chuyển đổi văn bản thành giọng nói:', error);
+                }
+            }
+
+            // Hàm để thay đổi giọng đọc
+            function changeVoice(voice) {
+                currentVoice = voice;
+                console.log(`Đã chuyển sang giọng đọc: ${voice}`);
+            }
+
+            // Xử lý sự kiện khi nhấn nút microphone
+            micButton.addEventListener('click', function() {
+                if (isRecording) {
+                    stopRecording();
+                } else {
+                    startRecording();
+                }
+            });
+
+            // Sửa hàm sendMessage để hỗ trợ phát âm thanh
             async function sendMessage() {
                 const prompt = userInput.value.trim();
                 if (!prompt) return;
+
+                // Lưu trạng thái hiện tại của voiceInputMode để sử dụng sau khi nhận phản hồi
+                const currentVoiceMode = voiceInputMode;
+                console.log("Trạng thái voiceInputMode khi gửi tin nhắn:", currentVoiceMode);
 
                 addMessage('user', prompt);
                 userInput.value = '';
@@ -268,7 +559,19 @@
                     } else {
                         const data = await response.json();
                         if (data.role === 'assistant') {
-                            addMessage('assistant', data.content);
+                            const messageDiv = addMessage('assistant', data.content);
+
+                            // Chỉ phát âm thanh khi ở chế độ nhập giọng nói
+                            if (data.content && currentVoiceMode) {
+                                console.log("Đang phát âm thanh cho phản hồi (chế độ giọng nói)");
+                                textToSpeech(data.content);
+                            } else if (data.content) {
+                                console.log("Không phát âm thanh vì không ở chế độ nhập giọng nói");
+                            }
+
+                            // Đặt lại voiceInputMode sau khi xử lý phản hồi
+                            voiceInputMode = false;
+
                             // Display product images if available
                             if (data.product_images) {
                                 displayProductImages(data.product_images);
@@ -288,94 +591,57 @@
                     userInput.disabled = false;
                     sendButton.textContent = 'Gửi';
                     userInput.focus();
+
+
                 }
             }
 
-            sendButton.addEventListener('click', sendMessage);
-            userInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter' && !event.shiftKey) { 
-                    event.preventDefault();
-                    sendMessage();
+            // Xử lý sự kiện khi nhấn nút cài đặt giọng nói
+            const voiceSettingsButton = document.getElementById('voice-settings-button');
+            const voiceDropdownContent = document.getElementById('voice-dropdown-content');
+            const voiceOptions = document.querySelectorAll('.voice-option');
+
+            voiceSettingsButton.addEventListener('click', function() {
+                voiceDropdownContent.classList.toggle('show');
+            });
+
+            // Đóng dropdown khi nhấp vào bên ngoài
+            window.addEventListener('click', function(event) {
+                if (!event.target.matches('#voice-settings-button') &&
+                    !event.target.closest('#voice-settings-button') &&
+                    !event.target.matches('.voice-dropdown-content') &&
+                    !event.target.closest('.voice-dropdown-content')) {
+                    if (voiceDropdownContent.classList.contains('show')) {
+                        voiceDropdownContent.classList.remove('show');
+                    }
                 }
             });
-       
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebar-toggle');
 
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('sidebar-collapsed');
-         
-                sidebarToggle.textContent = sidebar.classList.contains('sidebar-collapsed') ? '☰' : '✕'; 
-            });
-
-          
-            userInput.focus();
-
-            uploadButton.addEventListener('click', () => {
-                imageUpload.click();
-            });
-
-            imageUpload.addEventListener('change', async () => {
-                const file = imageUpload.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = async function(e) {
-                        const imageDataUrl = e.target.result;
-                        addImageMessage('user', imageDataUrl); 
-                        
-                   
-                        const processingMsgDiv = addMessage('assistant', '<i>Đang xử lý ảnh...</i>');
-                        processingMsgDiv.id = 'image-processing-indicator';
-
-                        const formData = new FormData();
-                        formData.append('image', file);
-                        await processImageBackend(formData); 
+            // Cập nhật trạng thái active cho giọng đọc hiện tại
+            function updateActiveVoice() {
+                voiceOptions.forEach(option => {
+                    const voiceValue = option.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    if (voiceValue === currentVoice) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
                     }
-                    reader.readAsDataURL(file);
-                }
-
-                 imageUpload.value = null;
-            });
-
-            async function processImageBackend(formData) { 
-                try {
-                    const response = await fetch("{{ url_for('process_image') }}", {
-                        method: 'POST',
-                        body: formData,
-                    });
-
-               
-                    const indicator = document.getElementById('image-processing-indicator');
-                    if (indicator) {
-                        chatHistory.removeChild(indicator);
-                    }
-
-                    if (!response.ok) {
-                        throw new Error(`Lỗi ${response.status}: ${response.statusText}`);
-                    }
-
-                    const result = await response.json();
-                    addMessage('assistant', result.content);
-                    // Display product images if available
-                    if (result.product_images) {
-                        displayProductImages(result.product_images);
-                    }
-                } catch (error) {
-                    
-                    const indicator = document.getElementById('image-processing-indicator');
-                    if (indicator) {
-                        chatHistory.removeChild(indicator);
-                    }
-                    console.error('Error processing image:', error);
-                    addMessage('assistant', '⚠️ Xin lỗi, đã có lỗi xảy ra khi xử lý hình ảnh.');
-                }
+                });
             }
 
-            // Xử lý reload trang
-            window.addEventListener('beforeunload', function() {
-                fetch('/reset_session');
-            });
+            // Ghi đè hàm changeVoice để cập nhật UI
+            const originalChangeVoice = changeVoice;
+            changeVoice = function(voice) {
+                originalChangeVoice(voice);
+                updateActiveVoice();
+                voiceDropdownContent.classList.remove('show');
+            };
 
+            // Không cần hàm kiểm tra dịch vụ giọng nói nữa
+
+            // Khởi tạo Web Speech API và cập nhật UI khi trang được tải
+            initSpeechRecognition();
+            updateActiveVoice();
         </script>
     </body>
-    </html> 
+    </html>
