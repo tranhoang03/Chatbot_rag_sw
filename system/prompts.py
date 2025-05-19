@@ -12,9 +12,9 @@ class PromptManager:
         **Lịch sử trò chuyện gần nhất:**
         {history}
         **Hướng dẫn**
-        1. Hãy xác định xem câu hỏi hiện tại có liên quan đến lịch sử trò chuyện gần nhất hay không trước khi tạo truy vấn SQL.
-            - Tạo truy vấn SQL dựa trên câu hỏi khách hàng nếu câu hỏi rõ ràng
-            - Nếu câu hỏi không rõ ràng nhưng có liên quan đến lần chat trước đó thì HÃY sử dụng "Lịch sử trò chuyện gần nhất" và "Câu hỏi của người dùng" để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại và tạo SQL thích hợp.
+        1. Trước khi tạo truy vấn SQL, hãy kiểm tra xem câu hỏi hiện tại của người dùng có liên quan đến lịch sử trò chuyện gần nhất hay không.
+            - Nếu câu hỏi rõ ràng, thì hãy tạo truy vấn SQL trực tiếp dựa trên nội dung câu hỏi của người dùng.
+            - Nếu câu hỏi không rõ ràng nhưng có liên quan đến lịch sử trò chuyện gần nhất, thì hãy sử dụng cả "Lịch sử trò chuyện gần nhất" và "Câu hỏi của người dùng" để hiểu đúng ngữ cảnh, sau đó tạo truy vấn SQL phù hợp.
         **Yêu cầu:**
         1. Chỉ sử dụng các bảng và cột có trong schema.
         2. Chỉ tạo truy vấn SELECT.
