@@ -21,6 +21,14 @@ Hệ thống trợ lý AI thông minh cho cửa hàng đồ uống, tích hợp 
 - Đề xuất sản phẩm tương tự dựa trên hình ảnh
 - Tìm kiếm sản phẩm bằng hình ảnh
 
+<<<<<<< Updated upstream
+=======
+### 4. Voice Chat
+- Chuyển đổi văn bản thành giọng nói với ElevenLabs API
+- Hỗ trợ nhiều giọng đọc khác nhau
+- Điều chỉnh tốc độ đọc
+
+>>>>>>> Stashed changes
 ## 🛠 Công Nghệ Sử Dụng
 
 ### Backend
@@ -30,10 +38,11 @@ Hệ thống trợ lý AI thông minh cho cửa hàng đồ uống, tích hợp 
 - **FAISS**: Tìm kiếm vector hiệu quả
 
 ### AI/ML
-- **InsightFace**: Nhận diện khuôn mặt
+- **InsightFace** (tùy chọn): Nhận diện khuôn mặt
 - **PhoBERT**: Xử lý ngôn ngữ tiếng Việt
 - **Google Generative AI**: Chatbot thông minh
 - **OpenCV & Pillow**: Xử lý hình ảnh
+- **TorchVision**: Xử lý và phân tích hình ảnh
 
 ### Frontend
 - **HTML5/CSS3**: Giao diện người dùng
@@ -69,6 +78,30 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+#### Lưu ý về các thư viện đặc biệt
+
+1. **InsightFace**
+
+   Thư viện InsightFace yêu cầu Microsoft Visual C++ Build Tools để cài đặt. Nếu bạn gặp lỗi khi cài đặt InsightFace, bạn cần:
+
+   - Cài đặt [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+   - Sau đó cài đặt InsightFace:
+     ```bash
+     pip install insightface
+     ```
+
+   InsightFace là thư viện cần thiết cho tính năng xác thực khuôn mặt của ứng dụng.
+
+2. **PyAV (av)**
+
+   Thư viện PyAV (av) yêu cầu FFmpeg để hoạt động. Nếu bạn gặp lỗi khi cài đặt hoặc sử dụng PyAV, bạn cần:
+
+   - Windows: Tải và cài đặt [FFmpeg](https://ffmpeg.org/download.html)
+   - Linux: `sudo apt-get install ffmpeg`
+   - macOS: `brew install ffmpeg`
+
+   PyAV được sử dụng cho xử lý âm thanh trong tính năng voice chat.
+
 ### Bước 3: Cấu Hình
 1. Tạo file `.env` với nội dung:
 ```env
@@ -101,6 +134,7 @@ MAX_HISTORY_PER_USER=3
 # API Keys
 GOOGLE_API_KEY=your_google_api_key
 HUGGINGFACE_HUB_TOKEN=your_huggingface_token
+ELEVENLABS_API_KEY=your_elevenlabs_api_key
 
 # Security
 FLASK_SECRET_KEY=your_flask_secret_key
@@ -128,7 +162,10 @@ python app.py
 ├── app.py                # Flask app chính, định nghĩa endpoint và socket
 ├── config.py             # Cấu hình hệ thống, biến môi trường
 ├── utils.py              # Hàm tiện ích
-├── system/               # Các module lõi: xác thực khuôn mặt, RAG, phân tích ảnh
+├── system/               # Các module lõi
+│   ├── face_auth.py      # Xác thực khuôn mặt (yêu cầu InsightFace)
+│   ├── face_auth_mock.py # Phiên bản mock của xác thực khuôn mặt (không yêu cầu InsightFace)
+│   └── rag_system.py     # Hệ thống RAG (Retrieval-Augmented Generation)
 ├── search_engine/        # Các file phục vụ tìm kiếm, Vector Store FAISS, trích xuất đặc trưng ảnh,..
 ├── models/               # Mô hình phục vụ xác minh khuôn mặt(ONNX, PhoBERT, ...)
 ├── templates/            # HTML templates (auth, chat, register, ...)
@@ -168,6 +205,49 @@ python app.py
 - Mã hóa embedding khuôn mặt
 - Giới hạn thời gian xác thực 5 giây
 
+## ⚠️ Xử Lý Sự Cố
+
+### Lỗi "No module named 'insightface'"
+Nếu bạn gặp lỗi này, bạn cần cài đặt InsightFace như hướng dẫn ở phần "Lưu ý về các thư viện đặc biệt". Đảm bảo bạn đã cài đặt Microsoft Visual C++ Build Tools trước khi cài đặt InsightFace.
+
+### Lỗi "No module named 'av'"
+Nếu bạn gặp lỗi này, bạn cần cài đặt PyAV và FFmpeg như hướng dẫn ở phần "Lưu ý về các thư viện đặc biệt". Đảm bảo bạn đã cài đặt FFmpeg trước khi cài đặt PyAV.
+
+```bash
+pip install av
+```
+
+### Lỗi "No module named 'torchvision'"
+Cài đặt thư viện torchvision:
+```bash
+pip install torchvision
+```
+
+### Lỗi khi tải mô hình
+Đảm bảo bạn đã cung cấp API key hợp lệ trong file .env và có kết nối internet ổn định.
+
+### Lỗi liên quan đến InsightFace
+Nếu bạn gặp lỗi liên quan đến InsightFace khi chạy ứng dụng, hãy kiểm tra:
+1. Đã cài đặt đúng phiên bản InsightFace (0.5.0 hoặc cao hơn)
+2. Đã cài đặt đầy đủ các thư viện phụ thuộc của InsightFace
+3. Đã cài đặt Microsoft Visual C++ Build Tools
+
+Bạn có thể thử cài đặt lại InsightFace với lệnh:
+```bash
+pip uninstall insightface
+pip install insightface
+```
+
+### Lỗi liên quan đến FFmpeg
+Nếu bạn gặp lỗi liên quan đến FFmpeg khi sử dụng tính năng voice chat, hãy kiểm tra:
+1. Đã cài đặt FFmpeg và thêm vào PATH
+2. Đã cài đặt PyAV (av) đúng cách
+
+Bạn có thể thử cài đặt lại PyAV với lệnh:
+```bash
+pip uninstall av
+pip install av
+```
 
 
 ## 🤝 Đóng Góp
@@ -184,3 +264,5 @@ Mọi ý kiến, đóng góp xin gửi về:
 - Google Generative AI cho chatbot
 - VinAI cho PhoBERT
 - Meta cho FAISS
+- ElevenLabs cho công nghệ chuyển văn bản thành giọng nói
+- PyAV và FFmpeg cho xử lý âm thanh
