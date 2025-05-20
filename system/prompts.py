@@ -38,9 +38,9 @@ class PromptManager:
         10. Nếu một sản phẩm có nhiều biến thể (variant), hãy sử dụng GROUP_CONCAT để gộp các thuộc tính biến thể vào một chuỗi duy nhất nhằm giảm số dòng trả về mà vẫn giữ đủ thông tin.
             - Ví dụ: Gộp các biến thể thành chuỗi như 'Size: M, Price: 25000' rồi dùng GROUP_CONCAT để nối lại thành một cột.
             - Có thể gộp các cột như: Price, Size, Volume, Description, v.v.
-
-        11. Khi dùng GROUP_CONCAT, nhớ thêm GROUP BY theo các cột định danh sản phẩm ví dụ như p.Id, p.Name_Product, c.Name_Cat.
-
+        **Lưu ý quan trọng:**
+            - Khi tên cột hoặc bảng có dấu cách hoặc ký tự đặc biệt, phải dùng dấu ngoặc kép kép " " (ví dụ: "Beverage Option") thay vì dấu nháy đơn ' '.
+            - Khi sử dụng GROUP_CONCAT phải có GROUP BY theo các cột định danh sản phẩm như p.Id, p.Name_Product, c.Name_Cat để đảm bảo kết quả chính xác.
         **Quy tắc:**
         - CHỈ trả về truy vấn SQL hợp lệ mà không kèm giải thích.
         - KHÔNG dùng Markdown code block hoặc comment.
