@@ -65,9 +65,7 @@ class ToolManager:
         {data_schema}
         **HƯỚNG DẪN CHỌN CÔNG CỤ DỰA TRÊN NGỮ CÁNH**: 
         1. Nếu câu hỏi hiện tại liên quan trực tiếp đến lịch sử trò chuyện, hãy kết hợp cả câu hỏi và lịch sử để chọn công cụ phù hợp.
-
         2. Nếu câu hỏi không rõ ràng nhưng có vẻ liên quan đến lịch sử, hãy sử dụng cả câu hỏi và lịch sử để suy luận ngữ cảnh, rồi chọn công cụ.
-
         3. Nếu câu hỏi không rõ ràng và cũng không liên quan đến lịch sử, chỉ cần xét riêng nội dung câu hỏi hiện tại để chọn công cụ.
         **YÊU CẦU**:
         1. Hãy chọn MỘT công cụ DUY NHẤT phù hợp nhất để trả lời câu hỏi này. 
