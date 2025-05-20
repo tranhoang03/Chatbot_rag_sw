@@ -52,13 +52,13 @@ class ToolManager:
         prompt = f"""
         Bạn là một trợ lý AI chuyên nghiệp. Nhiệm vụ của bạn là phân tích yêu cầu của người dùng và chọn CÔNG CỤ (TOOL) phù hợp nhất để trả lời.
        
-              
         **LỊCH SỬ TRÒ CHUYỆN GẦN ĐÂYĐÂY:**
         {recent_history_str}
 
         **CÂU HỎI CỦA NGƯỜI DÙNGDÙNG:** {query}
         
         **HAI CÔNG CỤ CÓ THỂ SỬ DỤNG:**
+
         {tools_list_str}
 
         **Cơ sở dữ liệu**:
@@ -105,4 +105,4 @@ class ToolManager:
                 print(f"Lỗi khi parse args JSON: {e}")
                 args = {}
 
-        return tool_name, args 
+        return tool_name, args  
