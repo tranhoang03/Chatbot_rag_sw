@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 class PromptManager:
     @staticmethod
     def get_sql_generation_prompt(query: str, schema_info: str, history: str = "") -> str:
-        return f"""
+            return f"""
         Bạn là trợ lý thông minh chuyên chuyển đổi ngôn ngữ tự nhiên thành truy vấn SQL đúng cú pháp trên SQLite.
 
         Câu hỏi: "{query}"
@@ -11,10 +11,12 @@ class PromptManager:
 
         **Lịch sử trò chuyện gần nhất:**
         {history}
+
         **Hướng dẫn**
         1. Trước khi tạo truy vấn SQL, hãy kiểm tra xem câu hỏi hiện tại của người dùng có liên quan đến lịch sử trò chuyện gần nhất hay không.
             - Nếu câu hỏi rõ ràng, thì hãy tạo truy vấn SQL trực tiếp dựa trên nội dung câu hỏi của người dùng.
             - Nếu câu hỏi không rõ ràng nhưng có liên quan đến lịch sử trò chuyện gần nhất, thì hãy sử dụng cả "Lịch sử trò chuyện gần nhất" và "Câu hỏi của người dùng" để hiểu đúng ngữ cảnh, sau đó tạo truy vấn SQL phù hợp.
+
         **Yêu cầu:**
         1. Chỉ sử dụng các bảng và cột có trong schema.
         2. Chỉ tạo truy vấn SELECT.
@@ -23,7 +25,7 @@ class PromptManager:
         5. Dùng ORDER BY cho sắp xếp.
         6. Dùng JOIN hợp lý khi cần.
         7. Chỉ áp dụng điều kiện WHERE cho các cột bắt buộc như tên danh mục hoặc tên sản phẩm,...
-            Với các cột mô tả bổ sung như Calories, Sugar, Fat, Protein,,.. chỉ sử dụng để ưu tiên hoặc sắp xếp kết quả nếu dữ liệu tồn tại, nhưng không ép điều kiện lọc.
+            Với các cột mô tả bổ sung như Calories, Sugar, Fat, Protein,... chỉ sử dụng để ưu tiên hoặc sắp xếp kết quả nếu dữ liệu tồn tại, nhưng không ép điều kiện lọc.
         8. Nếu câu hỏi là tiếng Việt, bạn NÊN DỊCH các từ khóa liên quan (như tên sản phẩm hoặc danh mục) sang tiếng Anh để mở rộng điều kiện lọc, giúp truy vấn bao quát hơn mà vẫn giữ nguyên ý nghĩa.
             Ví dụ: Nếu khách hàng hỏi "cà phê nào có giá dưới 25000", bạn có thể viết truy vấn như sau mà không ảnh hưởng đến kết quả gốc:
             Câu lệnh gốc:
@@ -32,13 +34,23 @@ class PromptManager:
             Câu lệnh sau khi mở rộng điều kiện:
             SELECT p.Name, p.Price FROM Product p JOIN Categories c ON p.Categories_id = c.Id 
             WHERE (c.Name LIKE '%Cà phê%' OR c.Name LIKE '%Coffee%') AND p.Price < 25000
-        9. Mở rộng truy vấn để cung cấp thông tin đầy đủ và giàu giá trị phân tích hơn: Ví dụ: Nếu khách hỏi giá của đồ uống Coffe thì ngoài giá có thể SELECT thêm các trường liên quan như Tên, Mô tả, ...
+        9. Mở rộng truy vấn để cung cấp thông tin đầy đủ và giàu giá trị phân tích hơn: Ví dụ: Nếu khách hỏi giá của đồ uống Coffee thì ngoài giá có thể SELECT thêm các trường liên quan như Tên, Mô tả, ...
+
+        10. Nếu một sản phẩm có nhiều biến thể (variant), hãy sử dụng GROUP_CONCAT để gộp các thuộc tính biến thể vào một chuỗi duy nhất nhằm giảm số dòng trả về mà vẫn giữ đủ thông tin.
+            - Ví dụ: Gộp các biến thể thành chuỗi như 'Size: M, Price: 25000' rồi dùng GROUP_CONCAT để nối lại thành một cột.
+            - Có thể gộp các cột như: Price, Size, Volume, Description, v.v.
+
+        11. Khi dùng GROUP_CONCAT, nhớ thêm GROUP BY theo các cột định danh sản phẩm như p.Id, p.Name_Product, c.Name_Cat.
+
+        12. Nếu truy vấn đã dùng GROUP BY để gom nhóm sản phẩm, có thể bỏ LIMIT hoặc tăng giới hạn (LIMIT 50 hoặc LIMIT 100) để không làm mất thông tin ở các nhóm phía sau. Chỉ dùng LIMIT 10 khi truy vấn không có GROUP BY.
+
         **Quy tắc:**
         - CHỈ trả về truy vấn SQL hợp lệ mà không kèm giải thích.
         - KHÔNG dùng Markdown code block hoặc comment.
         - TRUY VẤN phải chạy được trên SQLite.
-        - Nếu không có điều kiện lọc cụ thể, hãy mặc định giới hạn kết quả trả về: `LIMIT 10`.
+        - LUÔN giới hạn tối đa 3 dòng kết quả: sử dụng `LIMIT 3` ở cuối truy vấn.
         """
+
 
     @staticmethod
     def get_vector_prompt(context: list, query: str, history: str, user_info: dict, purchase_history: list) -> str:
