@@ -52,22 +52,24 @@ class ToolManager:
         prompt = f"""
         Bạn là một trợ lý AI chuyên nghiệp. Nhiệm vụ của bạn là phân tích yêu cầu của người dùng và chọn CÔNG CỤ (TOOL) phù hợp nhất để trả lời.
        
-              
-        **Lịch sử trò chuyện gần đây:**
+        **LỊCH SỬ TRÒ CHUYỆN GẦN ĐÂYĐÂY:**
         {recent_history_str}
 
-        **Câu hỏi của người dùng:** {query}
+        **CÂU HỎI CỦA NGƯỜI DÙNGDÙNG:** {query}
         
-        **Hai công cụ bạn có thể sử dụng:**
+        **HAI CÔNG CỤ CÓ THỂ SỬ DỤNG:**
+
         {tools_list_str}
 
         **Cơ sở dữ liệu**:
         {data_schema}
-        **HƯỚNG DẪN**: 
-        1. Trước tiên, hãy kiểm tra xem câu hỏi hiện tại của người dùng có liên quan trực tiếp đến lịch sử trò chuyện trước đó không. Nếu có, hãy cân nhắc lịch sử chat khi xử lý.
-        2. Nếu câu hỏi không rõ ràng nhưng có vẻ liên quan đến lịch sử trò chuyện gần đây, hãy sử dụng cả “Lịch sử trò chuyện gần nhất” và “Câu hỏi của người dùng” để hiểu rõ hơn ngữ cảnh, từ đó lựa chọn công cụ phù hợp.  
-        3. Nếu câu hỏi vừa không rõ ràng, vừa không liên quan đến lịch sử trò chuyện, thì chỉ cần dựa vào nội dung của câu hỏi hiện tại để chọn công cụ thích hợp.
-        **Yêu cầu**:
+        **HƯỚNG DẪN CHỌN CÔNG CỤ DỰA TRÊN NGỮ CÁNH**: 
+        1. Nếu câu hỏi hiện tại liên quan trực tiếp đến lịch sử trò chuyện, hãy kết hợp cả câu hỏi và lịch sử để chọn công cụ phù hợp.
+
+        2. Nếu câu hỏi không rõ ràng nhưng có vẻ liên quan đến lịch sử, hãy sử dụng cả câu hỏi và lịch sử để suy luận ngữ cảnh, rồi chọn công cụ.
+
+        3. Nếu câu hỏi không rõ ràng và cũng không liên quan đến lịch sử, chỉ cần xét riêng nội dung câu hỏi hiện tại để chọn công cụ.
+        **YÊU CẦU**:
         1. Hãy chọn MỘT công cụ DUY NHẤT phù hợp nhất để trả lời câu hỏi này. 
         2. Không được trả về **additional_kwargs** rỗng. HOẶC Content sử dụng tool nào thì phải trả về tool đó.
         """
@@ -103,4 +105,4 @@ class ToolManager:
                 print(f"Lỗi khi parse args JSON: {e}")
                 args = {}
 
-        return tool_name, args 
+        return tool_name, args  

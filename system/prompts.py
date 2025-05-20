@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 class PromptManager:
     @staticmethod
     def get_sql_generation_prompt(query: str, schema_info: str, history: str = "") -> str:
-            return f"""
+        return f"""
         Bạn là trợ lý thông minh chuyên chuyển đổi ngôn ngữ tự nhiên thành truy vấn SQL đúng cú pháp trên SQLite.
 
         Câu hỏi: "{query}"
@@ -13,10 +13,9 @@ class PromptManager:
         {history}
 
         **Hướng dẫn**
-        1. Trước khi tạo truy vấn SQL, hãy kiểm tra xem câu hỏi hiện tại của người dùng có liên quan đến lịch sử trò chuyện gần nhất hay không.
-            - Nếu câu hỏi rõ ràng, thì hãy tạo truy vấn SQL trực tiếp dựa trên nội dung câu hỏi của người dùng.
-            - Nếu câu hỏi không rõ ràng nhưng có liên quan đến lịch sử trò chuyện gần nhất, thì hãy sử dụng cả "Lịch sử trò chuyện gần nhất" và "Câu hỏi của người dùng" để hiểu đúng ngữ cảnh, sau đó tạo truy vấn SQL phù hợp.
-
+        1. Hãy xác định xem câu hỏi hiện tại có liên quan đến lịch sử trò chuyện gần nhất hay không trước khi tạo truy vấn SQL.
+            - Tạo truy vấn SQL dựa trên câu hỏi khách hàng nếu câu hỏi rõ ràng
+            - Nếu câu hỏi không rõ ràng nhưng có liên quan đến lần chat trước đó thì HÃY sử dụng "Lịch sử trò chuyện gần nhất" và "Câu hỏi của người dùng" để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại và tạo SQL thích hợp.
         **Yêu cầu:**
         1. Chỉ sử dụng các bảng và cột có trong schema.
         2. Chỉ tạo truy vấn SELECT.
@@ -40,9 +39,7 @@ class PromptManager:
             - Ví dụ: Gộp các biến thể thành chuỗi như 'Size: M, Price: 25000' rồi dùng GROUP_CONCAT để nối lại thành một cột.
             - Có thể gộp các cột như: Price, Size, Volume, Description, v.v.
 
-        11. Khi dùng GROUP_CONCAT, nhớ thêm GROUP BY theo các cột định danh sản phẩm như p.Id, p.Name_Product, c.Name_Cat.
-
-        12. Nếu truy vấn đã dùng GROUP BY để gom nhóm sản phẩm, có thể bỏ LIMIT hoặc tăng giới hạn (LIMIT 50 hoặc LIMIT 100) để không làm mất thông tin ở các nhóm phía sau. Chỉ dùng LIMIT 10 khi truy vấn không có GROUP BY.
+        11. Khi dùng GROUP_CONCAT, nhớ thêm GROUP BY theo các cột định danh sản phẩm ví dụ như p.Id, p.Name_Product, c.Name_Cat.
 
         **Quy tắc:**
         - CHỈ trả về truy vấn SQL hợp lệ mà không kèm giải thích.
