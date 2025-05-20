@@ -60,21 +60,6 @@ class ChatHistory:
 
         self._save_histories() # Save after modification
 
-    def get_history(self, user_key: str) -> List[Dict[str, Any]]:
-        """Get all chat history for a specific user key."""
-        return self.histories.get(user_key, [])
-
-    def get_recent_history(self, user_key: str) -> str:
-        """Get recent chat history for a specific user key as a formatted string."""
-        user_history = self.histories.get(user_key, [])
-        if not user_history:
-            return ""
-
-        history_text = "Lịch sử trò chuyện gần đây:\n"
-        for entry in user_history:
-            history_text += f"Q: {entry['query']}\n"
-            history_text += f"A: {entry['response']}\n"
-        return history_text.strip() # Remove trailing newline
 
   
     def get_latest_chat(self, user_key: str) -> str:
