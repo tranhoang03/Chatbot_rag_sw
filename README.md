@@ -21,14 +21,11 @@ Hệ thống trợ lý AI thông minh cho cửa hàng đồ uống, tích hợp 
 - Đề xuất sản phẩm tương tự dựa trên hình ảnh
 - Tìm kiếm sản phẩm bằng hình ảnh
 
-<<<<<<< Updated upstream
-=======
 ### 4. Voice Chat
 - Chuyển đổi văn bản thành giọng nói với ElevenLabs API
 - Hỗ trợ nhiều giọng đọc khác nhau
 - Điều chỉnh tốc độ đọc
 
->>>>>>> Stashed changes
 ## 🛠 Công Nghệ Sử Dụng
 
 ### Backend
