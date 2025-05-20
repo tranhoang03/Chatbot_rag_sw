@@ -55,7 +55,7 @@ class ToolManager:
         **LỊCH SỬ TRÒ CHUYỆN GẦN ĐÂYĐÂY:**
         {recent_history_str}
 
-        **CÂU HỎI CỦA NGƯỜI DÙNGDÙNG:** {query}
+        **CÂU HỎI CỦA NGƯỜI DÙNG:** {query}
         
         **HAI CÔNG CỤ CÓ THỂ SỬ DỤNG:**
 
