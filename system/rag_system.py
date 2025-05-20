@@ -318,7 +318,7 @@ class OptimizedRAGSystem:
                 for i, (doc, score) in enumerate(text_docs):
                     context.append(f"Rank {i+1}: {doc.page_content}")
 
-            recent_history = self.chat_history.get_latest_chat(user_key)
+            recent_history = self.chat_history.get_recent_history(user_key)
 
             if is_image_upload:
                 prompt = PromptManager.get_image_upload_prompt(context, query, recent_history, user_info)
@@ -367,7 +367,7 @@ class OptimizedRAGSystem:
 
       
             formatted_results = format_sql_results(results)    
-            recent_history = self.chat_history.get_latest_chat(user_key)
+            recent_history = self.chat_history.get_recent_history(user_key)
 
             response_prompt = PromptManager.get_sql_response_prompt(
                 query=query,
