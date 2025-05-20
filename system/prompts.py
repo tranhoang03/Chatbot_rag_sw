@@ -42,8 +42,6 @@ class PromptManager:
 
         11. Khi dùng GROUP_CONCAT, nhớ thêm GROUP BY theo các cột định danh sản phẩm ví dụ như p.Id, p.Name_Product, c.Name_Cat.
 
-        12. Nếu truy vấn đã dùng GROUP BY để gom nhóm sản phẩm, có thể bỏ LIMIT hoặc tăng giới hạn (LIMIT 50 hoặc LIMIT 100) để không làm mất thông tin ở các nhóm phía sau. Chỉ dùng LIMIT 10 khi truy vấn không có GROUP BY.
-
         **Quy tắc:**
         - CHỈ trả về truy vấn SQL hợp lệ mà không kèm giải thích.
         - KHÔNG dùng Markdown code block hoặc comment.
