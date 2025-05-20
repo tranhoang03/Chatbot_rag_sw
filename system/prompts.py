@@ -40,7 +40,7 @@ class PromptManager:
             - Ví dụ: Gộp các biến thể thành chuỗi như 'Size: M, Price: 25000' rồi dùng GROUP_CONCAT để nối lại thành một cột.
             - Có thể gộp các cột như: Price, Size, Volume, Description, v.v.
 
-        11. Khi dùng GROUP_CONCAT, nhớ thêm GROUP BY theo các cột định danh sản phẩm như p.Id, p.Name_Product, c.Name_Cat.
+        11. Khi dùng GROUP_CONCAT, nhớ thêm GROUP BY theo các cột định danh sản phẩm ví dụ như p.Id, p.Name_Product, c.Name_Cat.
 
         12. Nếu truy vấn đã dùng GROUP BY để gom nhóm sản phẩm, có thể bỏ LIMIT hoặc tăng giới hạn (LIMIT 50 hoặc LIMIT 100) để không làm mất thông tin ở các nhóm phía sau. Chỉ dùng LIMIT 10 khi truy vấn không có GROUP BY.
 
