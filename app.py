@@ -10,13 +10,15 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from system.rag_system import OptimizedRAGSystem
 from system.face_auth import FaceAuthTransformer
 from system.voice_service import VoiceService
+from system.menu_service import MenuService
+from system.chat_service import ChatService
 from config import Config
 import os
 from dotenv import load_dotenv
 import numpy as np
 import cv2
 import logging
-from utils import get_purchase_history
+from utils import get_purchase_history, get_all_categories, get_products_by_category, get_all_products
 from search_engine.extract_info_image import LLMExtract
 from search_engine.get_URL_img import extract_product_images
 import sqlite3
@@ -30,11 +32,13 @@ socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 
 config = Config()
 rag_system = OptimizedRAGSystem(config)
+menu_service = MenuService(config)
+chat_service = ChatService(rag_system, menu_service)
 client_auth_transformers = {}
 
 
 voice_service = VoiceService()
-    
+
 logging.basicConfig(level=logging.DEBUG)
 
 def decode_image_from_base64(base64_string):
@@ -55,6 +59,11 @@ def decode_image_from_base64(base64_string):
 def index():
     """Serves the main page. Shows auth page if not logged in, chat page otherwise."""
 
+    # Kiểm tra session và tự động thiết lập anonymous nếu cần
+    if not session.get('authenticated', False) and not session.get('anonymous', False):
+        # Mặc định hiển thị trang đăng nhập
+        return render_template('auto_auth.html')
+
     if session.get('anonymous', False):
         return render_template('chat.html', user_info=None, purchase_history=[])
     elif session.get('authenticated', False) and 'user_info' in session:
@@ -69,52 +78,19 @@ def index():
 @app.route('/chat', methods=['POST'])
 def chat():
     """Handles incoming chat messages from authenticated or anonymous users."""
-
-    user_key = "anonymous"
-    scoped_user_info = None
-
-    if session.get('authenticated', False):
-        auth_user_info = session.get('user_info')
-        if auth_user_info and 'id' in auth_user_info:
-            scoped_user_info = auth_user_info
-            user_key = str(scoped_user_info['id'])
-        else:
-            print("WARNING: Authenticated session but no user_info found. Treating as anonymous.")
-            session.pop('authenticated', None)
-            session['anonymous'] = True
-            user_key = "anonymous"
-    elif session.get('anonymous', False):
-         user_key = "anonymous"
-         scoped_user_info = None
-    else:
-        print("ERROR: /chat accessed without valid authenticated or anonymous session state.")
-        return jsonify({"error": "Invalid session state."}), 403
-
-
     data = request.get_json()
     user_query = data.get('prompt')
     if not user_query:
         return jsonify({"error": "No prompt provided"}), 400
 
-    user_query
+    # Process chat message using ChatService
+    result = chat_service.process_chat_message(user_query)
 
-    try:
-        response = rag_system.answer_query(user_key, user_query)
-        # Extract product images from the response
-        product_images = extract_product_images(response, config.db_path)
-        return jsonify({
-            "role": "assistant",
-            "content": response,
-            "product_images": product_images
-        })
-    except Exception as e:
-        print(f"Error getting RAG response: {e}")
+    # Check if result is an error
+    if isinstance(result, tuple) and len(result) == 2 and isinstance(result[0], dict) and "error" in result[0]:
+        return jsonify(result[0]), result[1]
 
-        try:
-            rag_system.chat_history.add_chat(user_key, user_query, f"ERROR: {e}")
-        except Exception as hist_e:
-            print(f"Failed to add error to chat history: {hist_e}")
-        return jsonify({"error": "Failed to get response from assistant"}), 500
+    return jsonify(result)
 
 @app.route('/logout')
 def logout():
@@ -260,7 +236,7 @@ def text_to_speech():
         voice = data.get('voice')  # Tùy chọn: cho phép client chỉ định giọng đọc
 
         # Sử dụng tốc độ đọc mặc định là 1.0
-        speed = 1.2         
+        speed = 1.2
 
         if not text:
             return jsonify({"error": "No text provided"}), 400
@@ -382,6 +358,11 @@ def process_image():
     user_info = None
     purchase_history = []
 
+    # Kiểm tra session và tự động thiết lập anonymous nếu cần
+    if not session.get('authenticated', False) and not session.get('anonymous', False):
+        print("WARNING: No valid session state found in process_image. Setting to anonymous.")
+        session['anonymous'] = True
+
     if session.get('authenticated', False):
         auth_user_info = session.get('user_info')
         if auth_user_info and 'id' in auth_user_info:
@@ -476,6 +457,63 @@ def process_image():
              try: os.remove(file_path)
              except Exception as rm_err: print(f"Error cleaning up file {file_path} after unexpected error: {rm_err}")
         return jsonify({'error': 'An unexpected server error occurred'}), 500
+
+@app.route('/menu_categories')
+def menu_categories():
+    """Get all menu categories."""
+    try:
+        categories = get_all_categories(config.db_path)
+        return jsonify({"categories": categories})
+    except Exception as e:
+        print(f"Error getting menu categories: {e}")
+        return jsonify({"error": "Failed to get menu categories"}), 500
+
+@app.route('/menu_products/<int:category_id>')
+def menu_products(category_id):
+    """Get products by category ID."""
+    try:
+        products = get_products_by_category(config.db_path, category_id)
+        return jsonify({"products": products})
+    except Exception as e:
+        print(f"Error getting products for category {category_id}: {e}")
+        return jsonify({"error": f"Failed to get products for category {category_id}"}), 500
+
+@app.route('/menu_suggestion', methods=['POST'])
+def menu_suggestion():
+    """Process menu suggestion request and return LLM-generated response."""
+    try:
+        data = request.get_json()
+        suggestion_type = data.get('type', 'category')  # 'category' or 'product'
+        category_id = data.get('category_id')
+
+        # Process menu suggestion using ChatService
+        result = chat_service.process_menu_suggestion(suggestion_type, category_id)
+        return jsonify(result)
+
+    except Exception as e:
+        print(f"Error processing menu suggestion: {e}")
+        return jsonify({"error": "Failed to process menu suggestion"}), 500
+
+@app.route('/suggested_query', methods=['POST'])
+def suggested_query():
+    """Handle predefined suggested queries with direct SQL execution."""
+    try:
+        data = request.get_json()
+        query_id = data.get('query_id')
+
+        if not query_id:
+            return jsonify({"error": "No query ID provided"}), 400
+
+        # Process suggested query using ChatService
+        result = chat_service.process_suggested_query(query_id)
+        return jsonify(result)
+
+    except ValueError as e:
+        print(f"Invalid query ID: {str(e)}")
+        return jsonify({"error": f"Invalid query ID: {str(e)}"}), 400
+    except Exception as e:
+        print(f"Error processing suggested query: {e}")
+        return jsonify({"error": "Failed to process suggested query"}), 500
 
 if __name__ == '__main__':
     if not os.path.exists('templates'):

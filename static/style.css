@@ -227,16 +227,18 @@ body {
 .chat-message {
     padding: 1rem;
     border-radius: 1.25rem;
-    max-width: 75%;
+    max-width: 80%;
     font-size: 1.125rem;
     line-height: 1.6;
     word-break: break-word;
     white-space: pre-wrap;
     display: flex;
+    flex-direction: row;
     align-items: flex-start;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     margin: 0.5rem 0;
     transition: background-color 0.3s;
+    width: auto;
 }
 
 /* User Message */
@@ -252,10 +254,33 @@ body {
 /* Assistant Message */
 .assistant-message {
     background-color: #fcd34d;
-    color: #181825;
+    color: #000000;
     align-self: flex-start;
     margin-right: auto;
     border-bottom-left-radius: 0.5rem;
+}
+
+/* Message content wrapper */
+.message-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Menu items in assistant message */
+.assistant-message .menu-item strong,
+.assistant-message .menu-product strong {
+    color: #181825;
+    font-weight: normal;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.assistant-message .menu-item div,
+.assistant-message .menu-product div {
+    color: #181825;
+    margin-left: 15px;
+    margin-bottom: 10px;
 }
 
 /* Avatar/Icon chung */
@@ -264,7 +289,7 @@ body {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    margin: 0 0.75rem;
+    margin-right: 0.75rem;
     flex-shrink: 0;
     text-align: center;
     line-height: 44px;

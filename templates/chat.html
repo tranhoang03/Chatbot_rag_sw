@@ -5,6 +5,182 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>RAG Chatbot</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <style>
+            /* Suggested Questions Styles */
+            .suggested-questions-area {
+                padding: 10px 0;
+                margin-bottom: 10px;
+            }
+
+            .suggested-questions-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                justify-content: center;
+            }
+
+            .suggested-question {
+                background-color: #4a5568;
+                color: white;
+                padding: 8px 12px;
+                border-radius: 16px;
+                font-size: 0.85em;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                display: inline-block;
+                white-space: nowrap;
+            }
+
+            .suggested-question:hover {
+                background-color: #2d3748;
+            }
+
+            /* Menu display styles */
+            .menu-header {
+                margin-bottom: 10px;
+            }
+
+            .menu-header h3 {
+                font-size: 1.2em;
+                color: #4299e1;
+                margin: 0;
+                padding: 0;
+            }
+
+            .menu-categories {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .menu-category-item {
+                background-color: #2d3748;
+                border-radius: 8px;
+                padding: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .menu-category-item:hover {
+                background-color: #4a5568;
+            }
+
+            .category-name {
+                font-weight: bold;
+                font-size: 1.1em;
+                margin-bottom: 5px;
+            }
+
+            .category-description {
+                font-size: 0.9em;
+                color: #cbd5e0;
+                margin-bottom: 5px;
+            }
+
+            .category-count {
+                font-size: 0.8em;
+                color: #a0aec0;
+            }
+
+            .menu-products {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .menu-product-item {
+                background-color: #2d3748;
+                border-radius: 8px;
+                padding: 12px;
+            }
+
+            .product-name {
+                font-weight: bold;
+                font-size: 1.1em;
+                margin-bottom: 3px;
+            }
+
+            .product-description {
+                font-size: 0.9em;
+                color: #e2e8f0;
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+
+            .product-details {
+                display: flex;
+                justify-content: flex-end;
+                font-size: 0.9em;
+            }
+
+            .product-category {
+                color: #a0aec0;
+                font-style: italic;
+            }
+
+            /* Simple menu styles */
+            .menu-item {
+                margin: 0;
+                padding: 0;
+                border: none;
+                background: none;
+                font-size: 1em;
+                line-height: 1.4;
+                cursor: pointer;
+                color: #000000;
+                display: block;
+            }
+
+            .menu-item:hover {
+                text-decoration: underline;
+            }
+
+            .menu-title {
+                font-weight: bold;
+                margin: 0;
+                padding: 0;
+                display: block;
+                font-size: 1.1em;
+                border: none;
+                color: #000000;
+                line-height: 1.4;
+            }
+
+            .menu-subtitle {
+                margin: 0;
+                padding: 0;
+                display: block;
+                font-weight: normal;
+                color: #000000;
+                line-height: 1.4;
+            }
+
+            .menu-product {
+                margin: 0;
+                padding: 0;
+                line-height: 1.4;
+                white-space: normal;
+                word-wrap: break-word;
+                display: block;
+                width: 100%;
+                border: none;
+            }
+
+            .product-name {
+                font-weight: normal;
+                margin: 0;
+                padding: 0;
+                display: inline;
+                color: #000000;
+            }
+
+            .product-description {
+                display: block;
+                margin: 0 0 0 10px;
+                padding: 0;
+                color: #000000;
+            }
+        </style>
     </head>
     <body>
         <div class="main-container">
@@ -99,6 +275,39 @@
 
                 </div>
 
+                <!-- Suggested Questions Area -->
+                <div class="suggested-questions-area">
+                    <div class="suggested-questions-container">
+                        <div class="suggested-question" data-query-id="menu_categories">
+                            <span>📋 Xem danh mục đồ uống</span>
+                        </div>
+                        <div class="suggested-question" data-query-id="classic_espresso">
+                            <span>☕ Classic Espresso Drinks</span>
+                        </div>
+                        <div class="suggested-question" data-query-id="coffee">
+                            <span>☕ Coffee</span>
+                        </div>
+                        <div class="suggested-question" data-query-id="frappuccino_coffee">
+                            <span>🥤 Frappuccino Blended Coffee</span>
+                        </div>
+                        <div class="suggested-question" data-query-id="frappuccino_creme">
+                            <span>🍦 Frappuccino Blended Crème</span>
+                        </div>
+                        <div class="suggested-question" data-query-id="iced_beverages">
+                            <span>🧊 Shaken Iced Beverages</span>
+                        </div>
+                        <div class="suggested-question" data-query-id="signature_espresso">
+                            <span>✨ Signature Espresso Drinks</span>
+                        </div>
+                        <div class="suggested-question" data-query-id="smoothies">
+                            <span>🥭 Smoothies</span>
+                        </div>
+                        <div class="suggested-question" data-query-id="tea">
+                            <span>🍵 Tazo Tea Drinks</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Input Area -->
                 <div class="input-area">
                     <input type="text" id="user-input" placeholder="Bạn cần tôi giúp gì? 🤔" autocomplete="off">
@@ -167,12 +376,16 @@
                 messageDiv.classList.add('chat-message');
                 messageDiv.classList.add(role === 'user' ? 'user-message' : 'assistant-message');
 
-
                 content = content.replace(/\(?(https?:\/\/[^\s]+)\)?/g, '<a href="$1" target="_blank" style="color: inherit;">$1</a>');
                 // Render newlines as <br>
                 content = content.replace(/\n/g, '<br>');
 
-                messageDiv.innerHTML = content;
+                // Create a wrapper for the content
+                const contentWrapper = document.createElement('div');
+                contentWrapper.classList.add('message-content');
+                contentWrapper.innerHTML = content;
+
+                messageDiv.appendChild(contentWrapper);
                 chatHistory.appendChild(messageDiv);
                 chatHistory.scrollTop = chatHistory.scrollHeight;
                 return messageDiv;
@@ -642,6 +855,125 @@
             // Khởi tạo Web Speech API và cập nhật UI khi trang được tải
             initSpeechRecognition();
             updateActiveVoice();
+
+            // Handle suggested questions
+            const suggestedQuestions = document.querySelectorAll('.suggested-question');
+
+            suggestedQuestions.forEach(question => {
+                question.addEventListener('click', async function() {
+                    const queryId = this.dataset.queryId;
+                    const questionText = this.innerText.trim();
+
+                    // Thêm câu hỏi của người dùng vào chat
+                    addMessage('user', `Cho tôi xem ${questionText}`);
+
+                    // Add thinking message
+                    const thinkingDiv = document.createElement('div');
+                    thinkingDiv.classList.add('chat-message', 'assistant-message');
+                    thinkingDiv.innerHTML = '<i>Đang tải dữ liệu menu...🤔</i>';
+                    thinkingDiv.id = 'suggested-query-indicator';
+                    chatHistory.appendChild(thinkingDiv);
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                    try {
+                        const response = await fetch("{{ url_for('suggested_query') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                query_id: queryId
+                            })
+                        });
+
+                        // Remove thinking indicator
+                        const indicator = document.getElementById('suggested-query-indicator');
+                        if (indicator) {
+                            chatHistory.removeChild(indicator);
+                        }
+
+                        if (!response.ok) {
+                            throw new Error(`Lỗi ${response.status}: ${response.statusText}`);
+                        }
+
+                        const data = await response.json();
+
+                        if (data.role === 'assistant' && data.content_type === 'menu_data') {
+                            // Create simple message with list of items
+                            let messageContent = `<span class="menu-title">${data.data.title}</span>`;
+
+                            if (data.data.type === 'categories') {
+                                // Create simple message with categories
+                                messageContent += '<span class="menu-subtitle">Các danh mục đồ uống:</span>';
+
+                                // Create simple list of categories with one line break between items
+                                data.data.items.forEach((category, index) => {
+                                    messageContent += `<div class="menu-item" data-category="${category.name}">- ${category.name}</div>\n`;
+                                });
+
+                                // Add message to chat
+                                const messageDiv = addMessage('assistant', messageContent);
+
+                                // Add click events to category items
+                                setTimeout(() => {
+                                    const categoryItems = document.querySelectorAll('.menu-item');
+                                    categoryItems.forEach(item => {
+                                        item.style.cursor = 'pointer';
+                                        item.addEventListener('click', () => {
+                                            const categoryName = item.dataset.category;
+                                            const categoryMap = {
+                                                'Classic Espresso Drinks': 'classic_espresso',
+                                                'Coffee': 'coffee',
+                                                'Frappuccino Blended Coffee': 'frappuccino_coffee',
+                                                'Frappuccino Blended Crème': 'frappuccino_creme',
+                                                'Shaken Iced Beverages': 'iced_beverages',
+                                                'Signature Espresso Drinks': 'signature_espresso',
+                                                'Smoothies': 'smoothies',
+                                                'Tazo Tea Drinks': 'tea'
+                                            };
+
+                                            const queryId = categoryMap[categoryName];
+                                            if (queryId) {
+                                                const button = document.querySelector(`.suggested-question[data-query-id="${queryId}"]`);
+                                                if (button) {
+                                                    button.click();
+                                                }
+                                            }
+                                        });
+                                    });
+                                }, 100);
+
+                            } else if (data.data.type === 'products') {
+                                // Create simple message with products
+                                messageContent += `<span class="menu-subtitle">Các sản phẩm trong danh mục ${data.data.title}:</span>`;
+
+                                // Create simple list of products with descriptions - one line break between items
+                                data.data.items.forEach((product, index) => {
+                                    messageContent += `<div class="menu-product"><span class="product-name">- ${product.name}</span><span class="product-description">${product.description}</span></div>\n`;
+                                });
+
+                                // Add message to chat
+                                addMessage('assistant', messageContent);
+
+                                // Display product images if available
+                                if (data.product_images && data.product_images.length > 0) {
+                                    displayProductImages(data.product_images);
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error processing suggested query:', error);
+
+                        // Remove thinking indicator if it exists
+                        const indicator = document.getElementById('suggested-query-indicator');
+                        if (indicator) {
+                            chatHistory.removeChild(indicator);
+                        }
+
+                        addMessage('assistant', `⚠️ Lỗi khi xử lý truy vấn: ${error.message}`);
+                    }
+                });
+            });
         </script>
     </body>
     </html>
