@@ -522,4 +522,4 @@ if __name__ == '__main__':
         os.makedirs('static')
 
     print(f"Starting Flask-SocketIO server on {config.host}:{config.port}...")
-    socketio.run(app, debug=True, host=config.host, port=config.port, use_reloader=False)
+    socketio.run(app, debug=True, host=config.host, port=config.port, use_reloader=False)   
