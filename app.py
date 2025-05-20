@@ -32,7 +32,6 @@ config = Config()
 rag_system = OptimizedRAGSystem(config)
 client_auth_transformers = {}
 
-
 voice_service = VoiceService()
     
 logging.basicConfig(level=logging.DEBUG)
