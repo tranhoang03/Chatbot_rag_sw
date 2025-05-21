@@ -1,8 +1,7 @@
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Optional
 from flask import session
 from system.rag_system import OptimizedRAGSystem
 from system.menu_service import MenuService
-from search_engine.get_URL_img import extract_product_images
 
 class ChatService:
     """Service class for handling chat-related operations"""
@@ -37,27 +36,15 @@ class ChatService:
         # Execute query
         formatted_data = self.menu_service.execute_query(query_id)
 
-        # Get question for query ID
+        # Get question for query ID and add to chat history
         user_question = self.menu_service.get_question_for_query_id(query_id)
-
-        # Format items for chat history
         assistant_response = self.menu_service.format_items_for_chat_history(formatted_data)
 
-        # Add to chat history
-        try:
-            self.rag_system.chat_history.add_chat(user_key, user_question, assistant_response)
-            print(f"Added suggested query to chat history for user: {user_key}")
-        except Exception as e:
-            print(f"Error adding suggested query to chat history: {e}")
+        # Add to chat history in a single try-except block
+        self._add_to_chat_history(user_key, user_question, assistant_response)
 
-        # Get product images
-        product_images = []
-        if formatted_data["type"] == "products":
-            for item in formatted_data["items"]:
-                product_name = item["name"]
-                image_info = extract_product_images(product_name, self.menu_service.db_path)
-                if image_info:
-                    product_images.extend(image_info)
+        # Get product images if this is a product query
+        product_images = self._get_product_images_for_query(formatted_data)
 
         # Return response
         return {
@@ -66,6 +53,28 @@ class ChatService:
             "data": formatted_data,
             "product_images": product_images
         }
+
+    def _add_to_chat_history(self, user_key: str, user_question: str, assistant_response: str) -> None:
+        """Add a conversation to chat history with error handling"""
+        try:
+            self.rag_system.chat_history.add_chat(user_key, user_question, assistant_response)
+            print(f"Added to chat history for user: {user_key}")
+        except Exception as e:
+            print(f"Error adding to chat history: {e}")
+
+    def _get_product_images_for_query(self, formatted_data: Dict) -> List:
+        """Get product images for query results"""
+        from search_engine.get_URL_img import extract_product_images
+
+        product_images = []
+        if formatted_data["type"] == "products":
+            for item in formatted_data["items"]:
+                product_name = item["name"]
+                image_info = extract_product_images(product_name, self.menu_service.db_path)
+                if image_info:
+                    product_images.extend(image_info)
+
+        return product_images
 
     def process_chat_message(self, user_query: str) -> Dict:
         """Process a chat message and return response"""
@@ -80,6 +89,7 @@ class ChatService:
             response = self.rag_system.answer_query(user_key, user_query)
 
             # Extract product images from the response
+            from search_engine.get_URL_img import extract_product_images
             product_images = extract_product_images(response, self.menu_service.db_path)
 
             # Return response
@@ -91,10 +101,8 @@ class ChatService:
         except Exception as e:
             print(f"Error getting RAG response: {e}")
 
-            try:
-                self.rag_system.chat_history.add_chat(user_key, user_query, f"ERROR: {e}")
-            except Exception as hist_e:
-                print(f"Failed to add error to chat history: {hist_e}")
+            # Add error to chat history
+            self._add_to_chat_history(user_key, user_query, f"ERROR: {e}")
 
             return {"error": "Failed to get response from assistant"}, 500
 
@@ -106,5 +114,5 @@ class ChatService:
         # Get user key
         user_key = self.get_user_key_from_session()
 
-        # Process menu suggestion using MenuService
-        return self.menu_service.process_menu_suggestion(user_key, suggestion_type, category_id)
+        # Process menu suggestion using MenuService, passing the existing RAG system instance
+        return self.menu_service.process_menu_suggestion(user_key, self.rag_system, suggestion_type, category_id)
