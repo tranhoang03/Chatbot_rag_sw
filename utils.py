@@ -360,27 +360,3 @@ def get_all_products(db_path: str) -> List[Dict[str, Any]]:
     except Exception as e:
         print(f"Error getting all products: {e}")
         return []
-
-def execute_sql_query(db_path: str, sql_query: str, params: tuple = ()) -> List[Dict[str, Any]]:
-    """Execute a SQL query and return results as a list of dictionaries."""
-    try:
-        conn = sqlite3.connect(db_path)
-        # Enable column name access by name
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-
-        cursor.execute(sql_query, params)
-        results = cursor.fetchall()
-
-        # Convert sqlite3.Row objects to dictionaries
-        dict_results = []
-        for row in results:
-            row_dict = {key: row[key] for key in row.keys()}
-            dict_results.append(row_dict)
-
-        conn.close()
-        return dict_results
-    except Exception as e:
-        print(f"Error executing SQL query: {e}")
-        print(f"Query: {sql_query}")
-        return []
