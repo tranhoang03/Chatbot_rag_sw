@@ -9,14 +9,32 @@
             /* Suggested Questions Styles */
             .suggested-questions-area {
                 padding: 10px 0;
-                margin-bottom: 10px;
+                margin-bottom: 0;
+                overflow-x: auto;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE and Edge */
+                position: absolute;
+                bottom: 70px; /* Vị trí cố định phía trên khu vực input */
+                left: 0;
+                right: 0;
+                cursor: grab; /* Indicates the area is draggable */
+                background-color: #1e1e2e;
+                z-index: 10;
+                border-top: 1px solid #333;
+                border-bottom: 1px solid #333;
+            }
+
+            /* Hide scrollbar completely for all browsers */
+            .suggested-questions-area::-webkit-scrollbar {
+                display: none;
             }
 
             .suggested-questions-container {
                 display: flex;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 gap: 8px;
-                justify-content: center;
+                padding: 0 30px; /* Increased padding to account for shadows */
+                width: max-content;
             }
 
             .suggested-question {
@@ -26,9 +44,57 @@
                 border-radius: 16px;
                 font-size: 0.85em;
                 cursor: pointer;
-                transition: background-color 0.3s;
+                transition: background-color 0.3s, transform 0.1s;
                 display: inline-block;
                 white-space: nowrap;
+                flex-shrink: 0;
+                user-select: none; /* Prevent text selection during drag */
+            }
+
+            /* Style when dragging */
+            .suggested-questions-area.dragging .suggested-question {
+                transform: scale(0.98);
+            }
+
+            /* Scroll shadows to indicate more content */
+            .scroll-shadow {
+                position: absolute;
+                top: 0;
+                height: 100%;
+                width: 30px;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .scroll-shadow-left {
+                left: 0;
+                background: linear-gradient(to right, rgba(30, 30, 46, 0.8), rgba(30, 30, 46, 0));
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .scroll-shadow-right {
+                right: 0;
+                background: linear-gradient(to left, rgba(30, 30, 46, 0.8), rgba(30, 30, 46, 0));
+                opacity: 1;
+                transition: opacity 0.3s;
+            }
+
+            /* Responsive styles for suggested questions */
+            @media (max-width: 768px) {
+                .suggested-questions-area {
+                    padding: 8px 0;
+                    margin-bottom: 8px;
+                }
+
+                .suggested-question {
+                    padding: 6px 10px;
+                    font-size: 0.8em;
+                }
+
+                .scroll-shadow {
+                    width: 20px;
+                }
             }
 
             .suggested-question:hover {
@@ -306,6 +372,9 @@
                             <span>🍵 Tazo Tea Drinks</span>
                         </div>
                     </div>
+                    <!-- Add shadow indicators for scrolling -->
+                    <div class="scroll-shadow scroll-shadow-left"></div>
+                    <div class="scroll-shadow scroll-shadow-right"></div>
                 </div>
 
                 <!-- Input Area -->
@@ -387,8 +456,22 @@
 
                 messageDiv.appendChild(contentWrapper);
                 chatHistory.appendChild(messageDiv);
+
+                // Scroll to bottom of chat history
                 chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                // Ensure suggested questions area is visible
+                ensureSuggestedQuestionsVisible();
+
                 return messageDiv;
+            }
+
+            // Function to update scroll shadows (không cần đảm bảo hiển thị vì đã cố định)
+            function ensureSuggestedQuestionsVisible() {
+                // Chỉ cần cập nhật scroll shadows
+                if (typeof updateScrollShadows === 'function') {
+                    setTimeout(updateScrollShadows, 100);
+                }
             }
 
             function addImageMessage(role, imageDataUrl) {
@@ -411,6 +494,9 @@
                 messageDiv.appendChild(imgContainer);
                 chatHistory.appendChild(messageDiv);
                 chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                // Ensure suggested questions area is visible
+                ensureSuggestedQuestionsVisible();
             }
 
             function displayProductImages(productImages) {
@@ -476,6 +562,9 @@
                 productsDiv.appendChild(gridContainer);
                 chatHistory.appendChild(productsDiv);
                 chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                // Ensure suggested questions area is visible
+                ensureSuggestedQuestionsVisible();
             }
 
 
@@ -855,6 +944,91 @@
             // Khởi tạo Web Speech API và cập nhật UI khi trang được tải
             initSpeechRecognition();
             updateActiveVoice();
+
+            // Handle scroll shadows and drag-to-scroll for suggested questions
+            const suggestedQuestionsArea = document.querySelector('.suggested-questions-area');
+            const leftShadow = document.querySelector('.scroll-shadow-left');
+            const rightShadow = document.querySelector('.scroll-shadow-right');
+
+            // Variables for drag scrolling
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            // Function to update scroll shadows
+            function updateScrollShadows() {
+                if (suggestedQuestionsArea.scrollLeft > 10) {
+                    leftShadow.style.opacity = '1';
+                } else {
+                    leftShadow.style.opacity = '0';
+                }
+
+                if (suggestedQuestionsArea.scrollWidth - suggestedQuestionsArea.scrollLeft - suggestedQuestionsArea.clientWidth < 10) {
+                    rightShadow.style.opacity = '0';
+                } else {
+                    rightShadow.style.opacity = '1';
+                }
+            }
+
+            // Initial update
+            updateScrollShadows();
+
+            // Update on scroll
+            suggestedQuestionsArea.addEventListener('scroll', updateScrollShadows);
+
+            // Update on window resize
+            window.addEventListener('resize', updateScrollShadows);
+
+            // Mouse events for drag scrolling
+            suggestedQuestionsArea.addEventListener('mousedown', (e) => {
+                isDown = true;
+                suggestedQuestionsArea.classList.add('dragging');
+                suggestedQuestionsArea.style.cursor = 'grabbing';
+                startX = e.pageX - suggestedQuestionsArea.offsetLeft;
+                scrollLeft = suggestedQuestionsArea.scrollLeft;
+                // Prevent text selection during drag
+                e.preventDefault();
+            });
+
+            suggestedQuestionsArea.addEventListener('mouseleave', () => {
+                isDown = false;
+                suggestedQuestionsArea.classList.remove('dragging');
+                suggestedQuestionsArea.style.cursor = 'grab';
+            });
+
+            suggestedQuestionsArea.addEventListener('mouseup', () => {
+                isDown = false;
+                suggestedQuestionsArea.classList.remove('dragging');
+                suggestedQuestionsArea.style.cursor = 'grab';
+            });
+
+            suggestedQuestionsArea.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - suggestedQuestionsArea.offsetLeft;
+                const walk = (x - startX) * 2; // Scroll speed multiplier
+                suggestedQuestionsArea.scrollLeft = scrollLeft - walk;
+            });
+
+            // Touch events for mobile drag scrolling
+            suggestedQuestionsArea.addEventListener('touchstart', (e) => {
+                isDown = true;
+                suggestedQuestionsArea.classList.add('dragging');
+                startX = e.touches[0].pageX - suggestedQuestionsArea.offsetLeft;
+                scrollLeft = suggestedQuestionsArea.scrollLeft;
+            }, { passive: true });
+
+            suggestedQuestionsArea.addEventListener('touchend', () => {
+                isDown = false;
+                suggestedQuestionsArea.classList.remove('dragging');
+            });
+
+            suggestedQuestionsArea.addEventListener('touchmove', (e) => {
+                if (!isDown) return;
+                const x = e.touches[0].pageX - suggestedQuestionsArea.offsetLeft;
+                const walk = (x - startX) * 2;
+                suggestedQuestionsArea.scrollLeft = scrollLeft - walk;
+            }, { passive: true });
 
             // Handle suggested questions
             const suggestedQuestions = document.querySelectorAll('.suggested-question');
