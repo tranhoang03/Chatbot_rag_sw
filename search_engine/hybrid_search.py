@@ -127,24 +127,34 @@ class HybridSearchResult:
         return top_candidates
 
     def _get_product_info(self, product_id: int) -> Dict[str, Any]:
-        """Lấy thông tin sản phẩm từ database"""
+        """Lấy thông tin sản phẩm từ database với giá các biến thể sử dụng GROUP_CONCAT"""
         try:
             conn = sqlite3.connect(self.config.db_path)
             cursor = conn.cursor()
+
+            # Sử dụng GROUP_CONCAT để gộp thông tin biến thể thành một chuỗi
             cursor.execute("""
-                SELECT p.Name_Product as name,
-                       p.Descriptions as description,
-                       v.Price as price
+                SELECT
+                    p.Name_Product as name,
+                    p.Descriptions as description,
+                    v.Price as price,
+                    'Biến thể: ' || GROUP_CONCAT(v."Beverage Option", ', ') || '; Giá: ' || GROUP_CONCAT(v.Price || ' VND', ', ') as variant_prices
                 FROM Product p
                 JOIN Variant v ON p.ID = v.Product_id
                 WHERE p.ID = ?
-                LIMIT 1
+                GROUP BY p.ID, p.Name_Product, p.Descriptions
             """, (product_id,))
+
             row = cursor.fetchone()
             conn.close()
 
             if row:
-                return {'name': row[0], 'description': row[1], 'price': row[2]}
+                return {
+                    'name': row[0],
+                    'description': row[1],
+                    'price': row[2],
+                    'variant_prices': row[3] if row[3] else 'Không có thông tin giá'
+                }
             return None
         except Exception as e:
             print(f"Lỗi khi lấy thông tin sản phẩm {product_id}: {e}")
