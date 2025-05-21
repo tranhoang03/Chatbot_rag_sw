@@ -1,0 +1,240 @@
+/* Suggested Questions Styles */
+.suggested-questions-area {
+    padding: 10px 0;
+    margin-bottom: 0;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    position: absolute;
+    bottom: 70px; /* Vị trí cố định phía trên khu vực input */
+    left: 0;
+    right: 0;
+    cursor: grab; /* Indicates the area is draggable */
+    background-color: #1e1e2e;
+    z-index: 10;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+}
+
+/* Hide scrollbar completely for all browsers */
+.suggested-questions-area::-webkit-scrollbar {
+    display: none;
+}
+
+.suggested-questions-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 0 30px; /* Increased padding to account for shadows */
+    width: max-content;
+}
+
+.suggested-question {
+    background-color: #4a5568;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 16px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    display: inline-block;
+    white-space: nowrap;
+    flex-shrink: 0;
+    user-select: none; /* Prevent text selection during drag */
+}
+
+/* Style when dragging */
+.suggested-questions-area.dragging .suggested-question {
+    transform: scale(0.98);
+}
+
+/* Scroll shadows to indicate more content */
+.scroll-shadow {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 30px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.scroll-shadow-left {
+    left: 0;
+    background: linear-gradient(to right, rgba(30, 30, 46, 0.8), rgba(30, 30, 46, 0));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.scroll-shadow-right {
+    right: 0;
+    background: linear-gradient(to left, rgba(30, 30, 46, 0.8), rgba(30, 30, 46, 0));
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+/* Responsive styles for suggested questions */
+@media (max-width: 768px) {
+    .suggested-questions-area {
+        padding: 8px 0;
+        margin-bottom: 8px;
+    }
+
+    .suggested-question {
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+
+    .scroll-shadow {
+        width: 20px;
+    }
+}
+
+.suggested-question:hover {
+    background-color: #2d3748;
+}
+
+/* Menu display styles */
+.menu-header {
+    margin-bottom: 10px;
+}
+
+.menu-header h3 {
+    font-size: 1.2em;
+    color: #4299e1;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menu-category-item {
+    background-color: #2d3748;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.menu-category-item:hover {
+    background-color: #4a5568;
+}
+
+.category-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.category-description {
+    font-size: 0.9em;
+    color: #cbd5e0;
+    margin-bottom: 5px;
+}
+
+.category-count {
+    font-size: 0.8em;
+    color: #a0aec0;
+}
+
+.menu-products {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-product-item {
+    background-color: #2d3748;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.product-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 3px;
+}
+
+.product-description {
+    font-size: 0.9em;
+    color: #e2e8f0;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.product-details {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.9em;
+}
+
+.product-category {
+    color: #a0aec0;
+    font-style: italic;
+}
+
+/* Simple menu styles */
+.menu-item {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 1em;
+    line-height: 1.4;
+    cursor: pointer;
+    color: #000000;
+    display: block;
+}
+
+.menu-item:hover {
+    text-decoration: underline;
+}
+
+.menu-title {
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    display: block;
+    font-size: 1.1em;
+    border: none;
+    color: #000000;
+    line-height: 1.4;
+}
+
+.menu-subtitle {
+    margin: 0;
+    padding: 0;
+    display: block;
+    font-weight: normal;
+    color: #000000;
+    line-height: 1.4;
+}
+
+.menu-product {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+    display: block;
+    width: 100%;
+    border: none;
+}
+
+.product-name {
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    color: #000000;
+}
+
+.product-description {
+    display: block;
+    margin: 0 0 0 10px;
+    padding: 0;
+    color: #000000;
+} 
