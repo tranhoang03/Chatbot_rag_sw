@@ -9,9 +9,9 @@ from flask import Flask, render_template, request, session, jsonify, redirect, u
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from system.rag_system import OptimizedRAGSystem
 from system.face_auth import FaceAuthTransformer
-from system.voice_service import VoiceService
-from system.menu_service import MenuService
-from system.chat_service import ChatService
+from services.voice_service import VoiceService
+from services.suggestion_service import SuggestionService
+from services.suggestion_query_handler import SuggestionQueryHandler
 from config import Config
 import os
 from dotenv import load_dotenv
@@ -32,8 +32,8 @@ socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 
 config = Config()
 rag_system = OptimizedRAGSystem(config)
-menu_service = MenuService(config)
-chat_service = ChatService(rag_system, menu_service)
+suggestion_service = SuggestionService(config)
+suggestion_handler = SuggestionQueryHandler(rag_system, suggestion_service)
 client_auth_transformers = {}
 
 
@@ -83,8 +83,8 @@ def chat():
     if not user_query:
         return jsonify({"error": "No prompt provided"}), 400
 
-    # Process chat message using ChatService
-    result = chat_service.process_chat_message(user_query)
+    # Process chat message using SuggestionQueryHandler
+    result = suggestion_handler.process_chat_message(user_query)
 
     # Check if result is an error
     if isinstance(result, tuple) and len(result) == 2 and isinstance(result[0], dict) and "error" in result[0]:
@@ -233,7 +233,7 @@ def text_to_speech():
     try:
         data = request.get_json()
         text = data.get('text')
-        voice = data.get('voice')  
+        voice = data.get('voice')
         # Sử dụng tốc độ đọc mặc định là 1.0
         speed = 1.2
 
@@ -406,7 +406,7 @@ def process_image():
                f" Màu {extracted_info.drink_color}" \
                f" Đựng trong {extracted_info.container_type}"
 
-
+    
         if extracted_info.topping != 'None':
             search_query += f" {extracted_info.topping}"
 
@@ -485,8 +485,8 @@ def menu_suggestion():
         suggestion_type = data.get('type', 'category')  # 'category' or 'product'
         category_id = data.get('category_id')
 
-        # Process menu suggestion using ChatService
-        result = chat_service.process_menu_suggestion(suggestion_type, category_id)
+        # Process menu suggestion using SuggestionQueryHandler
+        result = suggestion_handler.process_menu_suggestion(suggestion_type, category_id)
         return jsonify(result)
 
     except Exception as e:
@@ -503,8 +503,8 @@ def suggested_query():
         if not query_id:
             return jsonify({"error": "No query ID provided"}), 400
 
-        # Process suggested query using ChatService
-        result = chat_service.process_suggested_query(query_id)
+        # Process suggested query using SuggestionQueryHandler
+        result = suggestion_handler.process_suggested_query(query_id)
         return jsonify(result)
 
     except ValueError as e:
