@@ -859,119 +859,138 @@
             // Handle suggested questions
             const suggestedQuestions = document.querySelectorAll('.suggested-question');
 
-            suggestedQuestions.forEach(question => {
-                question.addEventListener('click', async function() {
-                    const queryId = this.dataset.queryId;
-                    const questionText = this.innerText.trim();
+            // Category mapping for quick lookup
+            const categoryMap = {
+                'Classic Espresso Drinks': 'classic_espresso',
+                'Coffee': 'coffee',
+                'Frappuccino Blended Coffee': 'frappuccino_coffee',
+                'Frappuccino Blended Crème': 'frappuccino_creme',
+                'Shaken Iced Beverages': 'iced_beverages',
+                'Signature Espresso Drinks': 'signature_espresso',
+                'Smoothies': 'smoothies',
+                'Tazo Tea Drinks': 'tea'
+            };
 
-                    // Thêm câu hỏi của người dùng vào chat
-                    addMessage('user', `Cho tôi xem ${questionText}`);
+            // Process suggested query response
+            async function processSuggestedQuery(queryId, questionText) {
+                // Add user message to chat
+                addMessage('user', `Cho tôi xem ${questionText}`);
 
-                    // Add thinking message
-                    const thinkingDiv = document.createElement('div');
-                    thinkingDiv.classList.add('chat-message', 'assistant-message');
-                    thinkingDiv.innerHTML = '<i>Đang tải dữ liệu menu...🤔</i>';
-                    thinkingDiv.id = 'suggested-query-indicator';
-                    chatHistory.appendChild(thinkingDiv);
-                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                // Show loading indicator
+                const thinkingDiv = document.createElement('div');
+                thinkingDiv.classList.add('chat-message', 'assistant-message');
+                thinkingDiv.innerHTML = '<i>Đang tải dữ liệu menu...🤔</i>';
+                thinkingDiv.id = 'suggested-query-indicator';
+                chatHistory.appendChild(thinkingDiv);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
 
-                    try {
-                        const response = await fetch("{{ url_for('suggested_query') }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                query_id: queryId
-                            })
-                        });
+                try {
+                    // Fetch data from server
+                    const response = await fetch("{{ url_for('suggested_query') }}", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ query_id: queryId })
+                    });
 
-                        // Remove thinking indicator
-                        const indicator = document.getElementById('suggested-query-indicator');
-                        if (indicator) {
-                            chatHistory.removeChild(indicator);
-                        }
+                    // Remove loading indicator
+                    removeLoadingIndicator();
 
-                        if (!response.ok) {
-                            throw new Error(`Lỗi ${response.status}: ${response.statusText}`);
-                        }
+                    if (!response.ok) {
+                        throw new Error(`Lỗi ${response.status}: ${response.statusText}`);
+                    }
 
-                        const data = await response.json();
+                    const data = await response.json();
 
-                        if (data.role === 'assistant' && data.content_type === 'menu_data') {
-                            // Create simple message with list of items
-                            let messageContent = `<span class="menu-title">${data.data.title}</span>`;
+                    if (data.role === 'assistant' && data.content_type === 'menu_data') {
+                        displayMenuData(data);
+                    }
+                } catch (error) {
+                    console.error('Error processing suggested query:', error);
+                    removeLoadingIndicator();
+                    addMessage('assistant', `⚠️ Lỗi khi xử lý truy vấn: ${error.message}`);
+                }
+            }
 
-                            if (data.data.type === 'categories') {
-                                // Create simple message with categories
-                                messageContent += '<span class="menu-subtitle">Các danh mục đồ uống:</span>';
+            // Remove loading indicator
+            function removeLoadingIndicator() {
+                const indicator = document.getElementById('suggested-query-indicator');
+                if (indicator) {
+                    chatHistory.removeChild(indicator);
+                }
+            }
 
-                                // Create simple list of categories with one line break between items
-                                data.data.items.forEach((category, index) => {
-                                    messageContent += `<div class="menu-item" data-category="${category.name}">- ${category.name}</div>\n`;
-                                });
+            // Display menu data based on type
+            function displayMenuData(data) {
+                // Create message content with title
+                let messageContent = `<span class="menu-title">${data.data.title}</span>`;
 
-                                // Add message to chat
-                                const messageDiv = addMessage('assistant', messageContent);
+                if (data.data.type === 'categories') {
+                    displayCategoriesData(data, messageContent);
+                } else if (data.data.type === 'products') {
+                    displayProductsData(data, messageContent);
+                }
+            }
 
-                                // Add click events to category items
-                                setTimeout(() => {
-                                    const categoryItems = document.querySelectorAll('.menu-item');
-                                    categoryItems.forEach(item => {
-                                        item.style.cursor = 'pointer';
-                                        item.addEventListener('click', () => {
-                                            const categoryName = item.dataset.category;
-                                            const categoryMap = {
-                                                'Classic Espresso Drinks': 'classic_espresso',
-                                                'Coffee': 'coffee',
-                                                'Frappuccino Blended Coffee': 'frappuccino_coffee',
-                                                'Frappuccino Blended Crème': 'frappuccino_creme',
-                                                'Shaken Iced Beverages': 'iced_beverages',
-                                                'Signature Espresso Drinks': 'signature_espresso',
-                                                'Smoothies': 'smoothies',
-                                                'Tazo Tea Drinks': 'tea'
-                                            };
+            // Display categories data
+            function displayCategoriesData(data, messageContent) {
+                // Add subtitle
+                messageContent += '<span class="menu-subtitle">Các danh mục đồ uống:</span>';
 
-                                            const queryId = categoryMap[categoryName];
-                                            if (queryId) {
-                                                const button = document.querySelector(`.suggested-question[data-query-id="${queryId}"]`);
-                                                if (button) {
-                                                    button.click();
-                                                }
-                                            }
-                                        });
-                                    });
-                                }, 100);
+                // Add categories list
+                data.data.items.forEach(category => {
+                    messageContent += `<div class="menu-item" data-category="${category.name}">- ${category.name}</div>\n`;
+                });
 
-                            } else if (data.data.type === 'products') {
-                                // Create simple message with products
-                                messageContent += `<span class="menu-subtitle">Các sản phẩm trong danh mục ${data.data.title}:</span>`;
+                // Add to chat
+                const messageDiv = addMessage('assistant', messageContent);
 
-                                // Create simple list of products with descriptions - one line break between items
-                                data.data.items.forEach((product, index) => {
-                                    messageContent += `<div class="menu-product"><span class="product-name">- ${product.name}</span><span class="product-description">${product.description}</span></div>\n`;
-                                });
+                // Add click events to category items
+                setTimeout(addCategoryClickHandlers, 100);
+            }
 
-                                // Add message to chat
-                                addMessage('assistant', messageContent);
-
-                                // Display product images if available
-                                if (data.product_images && data.product_images.length > 0) {
-                                    displayProductImages(data.product_images);
-                                }
+            // Add click handlers to category items
+            function addCategoryClickHandlers() {
+                const categoryItems = document.querySelectorAll('.menu-item');
+                categoryItems.forEach(item => {
+                    item.style.cursor = 'pointer';
+                    item.addEventListener('click', () => {
+                        const categoryName = item.dataset.category;
+                        const queryId = categoryMap[categoryName];
+                        if (queryId) {
+                            const button = document.querySelector(`.suggested-question[data-query-id="${queryId}"]`);
+                            if (button) {
+                                button.click();
                             }
                         }
-                    } catch (error) {
-                        console.error('Error processing suggested query:', error);
+                    });
+                });
+            }
 
-                        // Remove thinking indicator if it exists
-                        const indicator = document.getElementById('suggested-query-indicator');
-                        if (indicator) {
-                            chatHistory.removeChild(indicator);
-                        }
+            // Display products data
+            function displayProductsData(data, messageContent) {
+                // Add subtitle
+                messageContent += `<span class="menu-subtitle">Các sản phẩm trong danh mục ${data.data.title}:</span>`;
 
-                        addMessage('assistant', `⚠️ Lỗi khi xử lý truy vấn: ${error.message}`);
-                    }
+                // Add products list
+                data.data.items.forEach(product => {
+                    messageContent += `<div class="menu-product"><span class="product-name">- ${product.name}</span><span class="product-description">${product.description}</span></div>\n`;
+                });
+
+                // Add to chat
+                addMessage('assistant', messageContent);
+
+                // Display product images if available
+                if (data.product_images && data.product_images.length > 0) {
+                    displayProductImages(data.product_images);
+                }
+            }
+
+            // Add click event to each suggested question
+            suggestedQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const queryId = this.dataset.queryId;
+                    const questionText = this.innerText.trim();
+                    processSuggestedQuery(queryId, questionText);
                 });
             });
         </script>
