@@ -41,9 +41,9 @@ class VoiceService:
             "khanhlq": "JYT6xPLD3LGl0ui3YXNq"  # ID của giọng Khanhlq
         }
 
-        # Giọng mặc định là Huyen
+        # Giọng mặc định là Nữ
         self.default_voice_id = "foH7s9fX31wFFH2yqrFa"
-        self.default_voice_name = "Huyen"
+        self.default_voice_name = "Nữ"
 
         # Model mặc định hỗ trợ đa ngôn ngữ
         self.default_model = "eleven_flash_v2_5"
@@ -166,6 +166,6 @@ class VoiceService:
             dict: Dictionary chứa các giọng đọc có sẵn (tên: id).
         """
         return {
-            "Huyen (Nữ)": "foH7s9fX31wFFH2yqrFa",
-            "Khanhlq": "JYT6xPLD3LGl0ui3YXNq"
+            "Nữ": "foH7s9fX31wFFH2yqrFa",
+            "Nam": "JYT6xPLD3LGl0ui3YXNq"
         }
