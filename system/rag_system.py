@@ -3,10 +3,10 @@ from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
 import os
 import json
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, ToolMessage 
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, ToolMessage
 import sqlite3
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.embeddings import Embeddings 
+from langchain_core.embeddings import Embeddings
 from transformers import AutoModel, AutoTokenizer
 import torch
 from config import Config
@@ -42,7 +42,7 @@ class OptimizedRAGSystem:
             temperature=self.config.llm_temperature,
             google_api_key=self.config.google_api_key
         )
-        
+
         self.vector_store = self._initialize_vector_store()
         self.description_vector_store = self._initialize_description_vector_store()
 
@@ -105,7 +105,7 @@ class OptimizedRAGSystem:
             os.makedirs(self.config.description_vector_store_path, exist_ok=True)
             conn = sqlite3.connect(self.config.db_path)
             cursor = conn.cursor()
-            cursor.execute("""SELECT Product.ID,Name_Product, Descriptions 
+            cursor.execute("""SELECT Product.ID,Name_Product, Descriptions
                            FROM Product ;""")
             products = cursor.fetchall()
             conn.close()
@@ -132,8 +132,8 @@ class OptimizedRAGSystem:
         except Exception as e:
             print(f"Error creating description vector store: {e}")
             return None
-   
-    
+
+
 
     def _get_database_schema(self) -> str:
         """Get database schema information with descriptions"""
@@ -155,8 +155,8 @@ class OptimizedRAGSystem:
             schema_info = []
             for table in tables:
                 table_name = table[0]
-                
-                # Bỏ qua bảng customers 
+
+                # Bỏ qua bảng customers
                 if table_name.lower() in ["customers"]:
                     continue
 
@@ -210,12 +210,12 @@ class OptimizedRAGSystem:
 
             conn.close()
             return "\n\n".join(schema_info)
- 
+
         except Exception as e:
             print(f"Error getting database schema: {e}")
             return ""
 
-    
+
     def _answer_with_vector(self, user_key: str, query: str, user_info: dict, purchase_history: list, is_image_upload: bool = False, image_path: str = None) -> str:
         """Answer query using vector search, with a special prompt for image uploads"""
         try:
@@ -236,7 +236,7 @@ class OptimizedRAGSystem:
             print("\n=== Tìm kiếm dựa trên mô tả văn bản ===")
             text_docs = vector_store.similarity_search_with_score(
                 query,
-                k=self.config.top_k_results 
+                k=self.config.top_k_results
             )
             print(f"Số kết quả tìm kiếm văn bản: {len(text_docs)}")
             for i, (doc, score) in enumerate(text_docs):
@@ -244,13 +244,13 @@ class OptimizedRAGSystem:
                 print(f"Metadata: {doc.metadata}")
                 print(f"Content: {doc.page_content}")
                 print(f"Score: {score}")
-            
+
             # Nếu là tìm kiếm ảnh, thêm tìm kiếm dựa trên đặc trưng ảnh
             if is_image_upload and image_path:
                 print("\n=== Tìm kiếm dựa trên đặc trưng ảnh ===")
                 # Khởi tạo hybrid search
                 hybrid_search = HybridSearchResult(self.config)
-                
+
                 # Tìm kiếm dựa trên đặc trưng ảnh
                 image_results = hybrid_search.search_by_image_features(
                     image_path,  # Sử dụng đường dẫn ảnh upload
@@ -261,12 +261,12 @@ class OptimizedRAGSystem:
                     print(f"\nKết quả ảnh {i+1}:")
                     print(f"Metadata: {meta}")
                     print(f"Distance: {dist}")
-                
+
                 # Chuẩn hóa metadata từ kết quả văn bản
                 text_results = []
                 for doc, score in text_docs:
                     # Lấy product_id từ metadata của văn bản
-                    product_id = doc.metadata.get('ID')  
+                    product_id = doc.metadata.get('ID')
                     if product_id:
                         # Lấy thông tin sản phẩm từ database
                         product_info = hybrid_search._get_product_info(product_id)
@@ -276,16 +276,15 @@ class OptimizedRAGSystem:
                                 'name': product_info['name'],
                                 'description': product_info['description'],
                                 'price': product_info['price'],
-                                'image_source': product_info.get('image_source', ''),
-                                'score': score  
+                                'score': score
                             })
-                
+
                 # Chuẩn hóa metadata từ kết quả ảnh
                 image_results_normalized = []
                 for meta, dist in image_results:
                     product_id = meta.get('product_id')
                     if product_id:
-                        
+
                         product_info = hybrid_search._get_product_info(product_id)
                         if product_info:
                             image_results_normalized.append(({
@@ -293,30 +292,45 @@ class OptimizedRAGSystem:
                                 'name': product_info['name'],
                                 'description': product_info['description'],
                                 'price': product_info['price'],
-                                'image_source': meta.get('image_source', '')
                             }, dist))
-                
-                # Kết hợp kết quả từ hai phương pháp    
+
+                # Kết hợp kết quả từ hai phương pháp
                 combined_results = hybrid_search.combine_results_mbr(
                     text_results=text_results,
                     image_results=image_results_normalized,
-                    alpha=0.5,  
+                    alpha=0.5,
                     k=self.config.top_k_results
                 )
                 print(f"Số kết quả sau khi kết hợp: {len(combined_results)}")
                 for i, result in enumerate(combined_results):
                     print(f"\nKết quả kết hợp {i+1}:")
                     print(f"Metadata: {result}")
-                
+
                 # Tạo context từ kết quả kết hợp với rank
                 context = []
                 for i, result in enumerate(combined_results):
-                    context.append(f"Rank {i+1}: Tên: {result['name']}, Giá: {result['price']}")
+                    # Lấy product_id từ kết quả
+                    product_id = result.get('product_id')
+                    # Lấy thông tin chi tiết sản phẩm với giá các biến thể
+                    detailed_info = hybrid_search._get_product_info(product_id)
+                    # Thêm thông tin vào context
+                    context.append(f"Rank {i+1}: Tên: {detailed_info['name']}, Mô tả: {detailed_info['description']}, Giá: {detailed_info['variant_prices']}")
             else:
                 # Tạo context từ kết quả văn bản với rank
                 context = []
                 for i, (doc, score) in enumerate(text_docs):
-                    context.append(f"Rank {i+1}: {doc.page_content}")
+                    # Lấy product_id từ metadata
+                    product_id = doc.metadata.get('ID')
+                    if product_id:
+                        # Khởi tạo hybrid search để lấy thông tin chi tiết sản phẩm
+                        hybrid_search = HybridSearchResult(self.config)
+                        # Lấy thông tin chi tiết sản phẩm với giá các biến thể
+                        detailed_info = hybrid_search._get_product_info(product_id)
+                        # Thêm thông tin vào context
+                        context.append(f"Rank {i+1}: Tên: {detailed_info['name']}, Mô tả: {detailed_info['description']}, Giá: {detailed_info['variant_prices']}")
+                    else:
+                        # Trường hợp hiếm gặp khi không có product_id
+                        context.append(f"Rank {i+1}: {doc.page_content}")
 
             recent_history = self.chat_history.get_latest_chat(user_key)
 
@@ -326,7 +340,7 @@ class OptimizedRAGSystem:
                 prompt = PromptManager.get_vector_prompt(context, query, recent_history, user_info, purchase_history)
 
             print("\n=== Prompt gửi cho LLM ===")
-            print(prompt)  
+            print(prompt)
             response = self.llm.invoke(prompt)
 
             return getattr(response, "content", str(response)).strip()
@@ -336,7 +350,7 @@ class OptimizedRAGSystem:
             print(f"Error: {str(e)}")
             return f"Lỗi khi xử lý câu hỏi: {str(e)}"
 
-    
+
     def _answer_with_sql(self, user_key: str, query: str, user_info: dict, purchase_history: list) -> str:
         """Answer query using SQL"""
         try:
@@ -344,14 +358,14 @@ class OptimizedRAGSystem:
             latest_chat = self.chat_history.get_latest_chat(user_key)
 
             sql_prompt = PromptManager.get_sql_generation_prompt(
-                query=query, 
+                query=query,
                 schema_info=self._get_database_schema(),
                 history=latest_chat
             )
             sql_query_response = self.llm.invoke(sql_prompt)
 
             sql_query_string = sql_query_response.content.strip() if hasattr(sql_query_response, 'content') else str(sql_query_response).strip()
-            
+
             if sql_query_string.startswith("```") and sql_query_string.endswith("```"):
                 sql_query_string = "\n".join(sql_query_string.splitlines()[1:-1]).strip()
             print("Generated SQL query:", sql_query_string)
@@ -365,8 +379,8 @@ class OptimizedRAGSystem:
                 self.config.db_timeout
             )
 
-      
-            formatted_results = format_sql_results(results)    
+
+            formatted_results = format_sql_results(results)
             recent_history = self.chat_history.get_latest_chat(user_key)
 
             response_prompt = PromptManager.get_sql_response_prompt(
@@ -384,7 +398,7 @@ class OptimizedRAGSystem:
             print(f"Error during SQL processing: {e}")
             return f"Lỗi khi xử lý câu hỏi liên quan đến SQL: {str(e)}"
 
-    
+
     def answer_query(self, user_key: str, query: str) -> str:
         """Process query and return answer using function calling"""
         try:
@@ -420,7 +434,7 @@ class OptimizedRAGSystem:
                 final_response = self._answer_with_vector(user_key, query, user_info, purchase_history, is_image_upload)
             else:
                 final_response = "Xin lỗi, tôi không hiểu yêu cầu này hoặc công cụ được gọi không hợp lệ."
-                print(f"Unknown tool name: '{tool_name}'")        
+                print(f"Unknown tool name: '{tool_name}'")
 
             self.chat_history.add_chat(user_key, query, final_response)
             return final_response
@@ -430,6 +444,7 @@ class OptimizedRAGSystem:
             print(f"Error in answer_query: {error_msg}")
             self.chat_history.add_chat(user_key, query, error_msg)
             return error_msg
+
 
     def _get_user_info(self, user_key: str) -> dict:
         """Fetch user information based on user key"""
@@ -478,5 +493,5 @@ class OptimizedRAGSystem:
                 )
             except Exception as e:
                 print(f"Error loading description vector store: {e}")
-        
+
         return self._create_description_vector_store()
