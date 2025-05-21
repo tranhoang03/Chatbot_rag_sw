@@ -156,8 +156,8 @@ class OptimizedRAGSystem:
             for table in tables:
                 table_name = table[0]
                 
-                # Bỏ qua bảng customers và customer_preferences
-                if table_name.lower() in ["customers", "customer_preferences"]:
+                # Bỏ qua bảng customers 
+                if table_name.lower() in ["customers"]:
                     continue
 
                 # Lấy thông tin schema
