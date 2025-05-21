@@ -12,10 +12,9 @@ class PromptManager:
         **LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT:**
         {history}
 
-        **HƯỚNG DẪN TẠO TRUY VẤN SQL:**
-        1. Hãy xác định xem câu hỏi hiện tại có liên quan đến *LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT* hay không trước khi tạo truy vấn SQL.
-            - Tạo truy vấn SQL dựa trên câu hỏi khách hàng nếu câu hỏi rõ ràng
-            - Nếu câu hỏi không rõ ràng nhưng có liên quan đến lần chat trước đó thì HÃY sử dụng *LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT* và *CÂU HỎI* để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại và tạo SQL thích hợp.
+        **Hãy xác định xem câu hỏi hiện tại có liên quan đến *LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT* hay không trước khi tạo truy vấn SQL.**
+        1. Tạo truy vấn SQL dựa trên câu hỏi khách hàng nếu câu hỏi rõ ràng
+        2.Nếu câu hỏi không rõ ràng nhưng có liên quan đến lần chat trước đó thì HÃY sử dụng *LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT* và *CÂU HỎI* để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại và tạo SQL thích hợp.
         **YÊU CẦU:**
         1. Chỉ sử dụng các bảng và cột có trong SCHEMA.
         2. Chỉ tạo truy vấn SELECT.
