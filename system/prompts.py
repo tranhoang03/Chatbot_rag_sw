@@ -12,10 +12,18 @@ class PromptManager:
         **LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT:**
         {history}
 
-        **Hãy xác định xem câu hỏi hiện tại có liên quan đến *LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT* hay không trước khi tạo truy vấn SQL.**
-        1. Tạo truy vấn SQL dựa trên câu hỏi khách hàng nếu câu hỏi rõ ràng
-        2.Nếu câu hỏi không rõ ràng nhưng có liên quan đến lần chat trước đó thì HÃY sử dụng *LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT* và *CÂU HỎI* để hiểu rõ hơn về ngữ cảnh của câu hỏi hiện tại và tạo SQL thích hợp.
-        **YÊU CẦU:**
+        **HƯỚNG DẪN TẠO TRUY VẤN SQL:**
+        1. Tạo truy vấn SQL dựa trên **CÂU HỎI** của khách hàng nếu câu hỏi có chủ đề cụ thể, đối tượng rõ ràng, đủ thông tin tạo SQL độc lậplập
+        2. Nếu câu hỏi không có chủ đề cụ thể, không có đối tượng rõ ràng, thiếu thông tin, HÃY sử dụng *LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT* và *CÂU HỎI* để hiểu ngữ cảnh và tạo SQL phù hợp.
+            * Ví dụ:
+                - Lịch sử: `"query": "Cho tôi xem các loại Tazo Tea Drinks", "response": "Tazo Chai Tea Latte, Tazo Green Tea Latte"`
+                - Câu hỏi hiện tại:
+                    * *"Giá thì sao?"* ⇒ hỏi giá các sản phẩm trên
+                    * *"Giá sản phẩm đầu tiên?"* ⇒ hỏi giá Tazo Chai Tea Latte
+                    * *"Thêm thông tin đi"* ⇒ hỏi thêm chi tiết về 2 sản phẩm trên
+                     * *"Giá sản phẩm thứ 2"* ⇒ hỏi giá Tazo Green Tea Latte
+
+        **QUY TẮC TRUY VẤN SQL:**
         1. Chỉ sử dụng các bảng và cột có trong SCHEMA.
         2. Chỉ tạo truy vấn SELECT.
         3. Không dùng các từ khóa nguy hiểm như DROP, DELETE, UPDATE, INSERT, ALTER, TRUNCATE.
