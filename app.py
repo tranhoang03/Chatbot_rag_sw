@@ -233,8 +233,7 @@ def text_to_speech():
     try:
         data = request.get_json()
         text = data.get('text')
-        voice = data.get('voice')  # Tùy chọn: cho phép client chỉ định giọng đọc
-
+        voice = data.get('voice')  
         # Sử dụng tốc độ đọc mặc định là 1.0
         speed = 1.2
 
@@ -522,4 +521,4 @@ if __name__ == '__main__':
         os.makedirs('static')
 
     print(f"Starting Flask-SocketIO server on {config.host}:{config.port}...")
-    socketio.run(app, debug=True, host=config.host, port=config.port, use_reloader=False)   
+    socketio.run(app, debug=True, host=config.host, port=config.port, use_reloader=False)
