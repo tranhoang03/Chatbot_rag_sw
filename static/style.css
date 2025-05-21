@@ -198,6 +198,7 @@ body {
     height: 100%;
     background-color: #1e1e2e;
     overflow: hidden;
+    position: relative; /* Thêm position relative để có thể định vị các phần tử con */
 }
 
 /* Tiêu đề */
@@ -217,10 +218,12 @@ body {
 .chat-history {
     flex-grow: 1;
     padding: 1rem 1.5rem;
+    padding-bottom: 5rem; /* Tăng padding dưới để tạo không gian cho khu vực câu hỏi gợi ý */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    margin-bottom: 0;
 }
 
 /* Tin nhắn */
@@ -319,6 +322,9 @@ body {
     padding: 1rem;
     border-top: 1px solid #333;
     background-color: #181825;
+    position: relative;
+    z-index: 10;
+    /* Không cần position: absolute vì đây là phần tử cuối cùng trong flex container */
 }
 
 .input-area input[type="text"] {
