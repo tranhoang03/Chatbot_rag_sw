@@ -71,7 +71,7 @@ class ChatHistory:
         # Sắp xếp theo timestamp giảm dần và lấy phần tử đầu tiên
         latest_entry = max(user_history, key=lambda x: datetime.fromisoformat(x['timestamp']))
         
-        history_text = "Lịch sử trò chuyện gần đây:\n"
+        history_text = ""
         history_text += f"Q: {latest_entry['query']}\n"
         history_text += f"A: {latest_entry['response']}\n"
         return history_text.strip()
