@@ -1,8 +1,3 @@
-"""
-Module xử lý các chức năng liên quan đến giọng nói.
-Bao gồm Text-to-Speech (TTS) sử dụng ElevenLabs API.
-"""
-
 import os
 import logging
 from elevenlabs import ElevenLabs
