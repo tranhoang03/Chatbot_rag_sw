@@ -1,5 +1,21 @@
 {
-  "anonymous": [],
+  "anonymous": [
+    {
+      "timestamp": "2025-05-22T16:49:33.630324",
+      "query": "Cho tôi xem các loại Classic Espresso Drinks",
+      "response": "Đây là các sản phẩm trong danh mục Classic Espresso Drinks: Caffè Americano, Caffè Latte, Caffè Mocha, Cappuccino, Espresso, Skinny Latte (Any Flavour), Vanilla Latte"
+    },
+    {
+      "timestamp": "2025-05-22T16:50:07.885718",
+      "query": "Cho tôi xem các loại Shaken Iced Beverages",
+      "response": "Đây là các sản phẩm trong danh mục Shaken Iced Beverages: Iced Brewed Coffee, Iced Brewed Coffee With Milk, Shaken Iced Tazo Tea, Shaken Iced Tazo Tea Lemonade"
+    },
+    {
+      "timestamp": "2025-05-22T16:50:18.442190",
+      "query": "Cái gì?",
+      "response": "Bạn muốn biết gì vậy ạ?  Nếu bạn đang tìm kiếm đồ uống đá xay, chúng tôi có Iced Brewed Coffee, Iced Brewed Coffee With Milk, Shaken Iced Tazo Tea và Shaken Iced Tazo Tea Lemonade."
+    }
+  ],
   "72": [
     {
       "timestamp": "2025-04-27T13:09:07.301114",
@@ -46,19 +62,19 @@
   ],
   "71": [
     {
-      "timestamp": "2025-05-19T17:46:54.875180",
-      "query": "tôi muốn uống gì đó ngon ngọt mát",
-      "response": "Chào anh Hoàng! Anh muốn uống gì đó ngon, ngọt và mát phải không ạ?  Em thấy anh rất thích Java Chip Frappuccino và Caffè Latte trước đây.  Vậy nên em gợi ý anh hai lựa chọn này:\n\n1. **Caramel Frappuccino:**  Đây là sự kết hợp giữa cà phê espresso, sữa, đá xay và siro caramel, tạo nên vị ngọt ngào, béo ngậy và mát lạnh.  Rất phù hợp với sở thích của anh.\n\n2.  Nếu anh muốn thử gì đó không phải cà phê, thì  **Tazo Chai Tea Latte** cũng là một lựa chọn tuyệt vời.  Đây là trà đen kết hợp với các loại gia vị như quế, gừng, thảo quả và sữa tươi, tạo nên hương vị cay ấm, nhẹ nhàng và thanh khiết.  Nó sẽ rất ngon và mát mẻ.\n\nAnh muốn thử loại nào ạ?  Nếu vẫn chưa quyết định, anh có thể cho em biết anh thích vị ngọt nhiều hay ít, hoặc có thích hương vị trà hay cà phê hơn không để em tư vấn chính xác hơn nhé!"
+      "timestamp": "2025-05-22T16:42:35.263901",
+      "query": "Tối ngủ ở cà phê.",
+      "response": "Chào anh!  Ngủ không ngon à?  Anh muốn uống gì để dễ ngủ hơn vậy ạ?  Em thấy anh thích cà phê đậm đà (như Java Chip Frappuccino anh đã mua trước đó), nên có thể gợi ý anh thử Iced Brewed Coffee hoặc Caffè Americano.  Tuy nhiên, nếu anh muốn gì đó nhẹ nhàng hơn trước khi ngủ thì có lẽ không nên dùng cà phê.  Anh có muốn thử một loại đồ uống khác không ạ?"
     },
     {
-      "timestamp": "2025-05-19T17:47:15.181792",
-      "query": "giá loại 1 mà bạn vừa nêu",
-      "response": "Chào anh Hoàng!  Rất tiếc, hiện tại hệ thống chưa cập nhật giá cho Tazo Chai Tea Latte.  Anh có thể cho em biết anh muốn thêm thông tin gì khác về loại trà này không ạ? Ví dụ như thành phần, lượng calo hay cách thức phục vụ?  Hoặc anh có muốn em gợi ý thêm một số loại đồ uống khác không ạ?"
+      "timestamp": "2025-05-22T16:42:41.814531",
+      "query": "Phẩy.",
+      "response": "Dạ, anh muốn hỏi gì về các loại đồ uống ạ?  Em thấy kết quả tìm kiếm có 3 loại đồ uống với sữa không béo (Nonfat Milk)  có lượng calo, đường và caffeine khác nhau. Anh muốn loại nào ít calo, ít đường hay ít caffeine hơn ạ?  Hay anh muốn loại nào nhiều protein hơn?  Anh có thể cho em biết thêm thông tin để em tư vấn chính xác hơn được không ạ?"
     },
     {
-      "timestamp": "2025-05-19T17:47:38.913781",
-      "query": "Tôi nghĩ cửa hàng phải có giá chứ?",
-      "response": "Chào anh Hoàng!\n\nDạ, cửa hàng chúng em có đầy đủ giá cả các loại đồ uống.  Dựa trên kết quả tìm kiếm, giá của các sản phẩm như sau:\n\n1. Java Chip Frappuccino: 38.000 VNĐ (có tại Store 9 và Store 18)\n2. Mocha Light Frappuccino: 40.000 VNĐ (có tại Store 1)\n3. Tazo Green Tea Latte: 33.000 VNĐ (có tại Store 1)\n4. Vanilla Latte: 40.000 VNĐ (có tại Store 16)\n\n\nAnh muốn biết giá của sản phẩm nào khác không ạ?  Hoặc anh muốn biết giá tại cửa hàng cụ thể nào không ạ?"
+      "timestamp": "2025-05-22T16:43:32.183690",
+      "query": "Cho tôi xem các loại Coffee",
+      "response": "Đây là các sản phẩm trong danh mục Coffee: Brewed Coffee"
     }
   ],
   "73": [
