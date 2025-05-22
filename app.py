@@ -447,7 +447,7 @@ def process_image():
 
         return jsonify({
             'content': search_response,
-            'product_images': product_images
+            'product_images': product_images    
         })
 
     except Exception as e:
