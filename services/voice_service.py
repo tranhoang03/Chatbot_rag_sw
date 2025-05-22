@@ -37,8 +37,8 @@ class VoiceService:
 
         # Mapping tên giọng đọc thân thiện với ID
         self.voice_mapping = {
-            "huyen": "foH7s9fX31wFFH2yqrFa",  # ID của giọng Huyen
-            "khanhlq": "JYT6xPLD3LGl0ui3YXNq"  # ID của giọng Khanhlq
+            "huyen": "foH7s9fX31wFFH2yqrFa",
+            "khanhlq": "JYT6xPLD3LGl0ui3YXNq"  
         }
 
         # Giọng mặc định là Nữ
