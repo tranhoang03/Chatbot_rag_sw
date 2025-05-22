@@ -6,10 +6,6 @@ import io
 logger = logging.getLogger(__name__)
 
 class VoiceService:
-    """
-    Lớp cung cấp các dịch vụ xử lý giọng nói.
-    """
-
     def __init__(self):
         """
         Khởi tạo dịch vụ giọng nói.
@@ -44,31 +40,11 @@ class VoiceService:
         self.default_model = "eleven_flash_v2_5"
 
     def is_available(self):
-        """
-        Kiểm tra xem dịch vụ có sẵn sàng sử dụng không.
 
-        Returns:
-            bool: True nếu API key đã được cấu hình, False nếu không.
-        """
         return self.client is not None
 
     def text_to_speech(self, text, voice=None, model=None, speed=1.0):
-        """
-        Chuyển đổi văn bản thành giọng nói.
-
-        Args:
-            text (str): Văn bản cần chuyển đổi thành giọng nói.
-            voice (str, optional): Tên giọng đọc. Mặc định là None (sử dụng giọng mặc định).
-            model (str, optional): Model TTS. Mặc định là None (sử dụng model mặc định).
-            speed (float, optional): Tốc độ đọc, từ 0.7 đến 1.2. Mặc định là 1.0.
-
-        Returns:
-            bytes: Dữ liệu âm thanh dạng bytes.
-
-        Raises:
-            ValueError: Nếu API key chưa được cấu hình.
-            Exception: Nếu có lỗi khi gọi API.
-        """
+      
         if not self.client:
             logger.error("ElevenLabs API key chưa được cấu hình")
             raise ValueError("ElevenLabs API key chưa được cấu hình")
@@ -100,7 +76,7 @@ class VoiceService:
             model_id = model or self.default_model
 
 
-            text = "............... " + text
+            text = "....... " + text
 
             # Giới hạn độ dài văn bản để tránh lỗi
             if len(text) > 5000:
