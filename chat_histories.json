@@ -62,19 +62,19 @@
   ],
   "71": [
     {
-      "timestamp": "2025-05-22T16:42:35.263901",
-      "query": "Tối ngủ ở cà phê.",
-      "response": "Chào anh!  Ngủ không ngon à?  Anh muốn uống gì để dễ ngủ hơn vậy ạ?  Em thấy anh thích cà phê đậm đà (như Java Chip Frappuccino anh đã mua trước đó), nên có thể gợi ý anh thử Iced Brewed Coffee hoặc Caffè Americano.  Tuy nhiên, nếu anh muốn gì đó nhẹ nhàng hơn trước khi ngủ thì có lẽ không nên dùng cà phê.  Anh có muốn thử một loại đồ uống khác không ạ?"
+      "timestamp": "2025-05-22T16:56:15.464985",
+      "query": "Lô lô.",
+      "response": "Chào anh Trần Văn Hoàng!  \"Lô lô\" là gì vậy ạ? Anh có thể cho mình biết thêm thông tin để mình tư vấn chính xác hơn được không?  Ví dụ như anh muốn tìm loại đồ uống nào, hoặc anh muốn biết thông tin gì về \"lô lô\"?\n\nNếu anh muốn gợi ý đồ uống, dựa trên lịch sử mua hàng gần đây của anh, em thấy anh rất thích các loại đồ uống có sữa như Java Chip Frappuccino Soy milk, Caffè Latte Soy milk và Hot Chocolate 2% Milk. Anh có muốn thử thêm loại nào khác không ạ?"
     },
     {
-      "timestamp": "2025-05-22T16:42:41.814531",
+      "timestamp": "2025-05-22T17:02:51.128332",
+      "query": "A lô lô lô.",
+      "response": "Chào anh Trần Văn Hoàng!  \"A lô lô lô\" có vẻ như là một cách chào hỏi vui nhộn. Anh muốn mình tư vấn gì vậy ạ?\n\nNhìn vào lịch sử mua hàng gần đây, em thấy anh rất thích các loại đồ uống có sữa, đặc biệt là Java Chip Frappuccino Soy milk, Caffè Latte Soy milk và Hot Chocolate 2% Milk.  Anh có muốn thử thêm một loại đồ uống có sữa khác không ạ?  Hoặc anh có muốn thử một loại đồ uống khác không có sữa không?  Cho em biết thêm thông tin để em có thể tư vấn chính xác hơn nhé!"
+    },
+    {
+      "timestamp": "2025-05-22T17:10:35.237276",
       "query": "Phẩy.",
-      "response": "Dạ, anh muốn hỏi gì về các loại đồ uống ạ?  Em thấy kết quả tìm kiếm có 3 loại đồ uống với sữa không béo (Nonfat Milk)  có lượng calo, đường và caffeine khác nhau. Anh muốn loại nào ít calo, ít đường hay ít caffeine hơn ạ?  Hay anh muốn loại nào nhiều protein hơn?  Anh có thể cho em biết thêm thông tin để em tư vấn chính xác hơn được không ạ?"
-    },
-    {
-      "timestamp": "2025-05-22T16:43:32.183690",
-      "query": "Cho tôi xem các loại Coffee",
-      "response": "Đây là các sản phẩm trong danh mục Coffee: Brewed Coffee"
+      "response": "Dạ, anh muốn mình tư vấn gì thêm về đồ uống ạ?  Em thấy anh rất thích các loại đồ uống có sữa,  như Java Chip Frappuccino, Caffè Latte và Hot Chocolate.  Ba loại đồ uống trong kết quả tìm kiếm đều có sữa không béo (Nonfat Milk) và lượng calo, đường, protein khác nhau.  Anh muốn một loại nào nhiều calo hơn, ít calo hơn hay anh quan tâm đến chỉ số dinh dưỡng nào khác không ạ?  Cho em biết thêm để em tư vấn chính xác hơn nhé!"
     }
   ],
   "73": [
