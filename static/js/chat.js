@@ -345,7 +345,7 @@ async function textToSpeech(text) {
         console.log(`Đang chuyển đổi văn bản thành giọng nói với giọng ${currentVoice}...`);
         console.log(`Nội dung: "${text.substring(0, 100)}${text.length > 100 ? '...' : ''}"`);
 
-        const response = await fetch("/text_to_speech", {
+        const response = await fetch("/text-to-speech", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -665,4 +665,4 @@ suggestedQuestions.forEach(question => {
         const questionText = this.innerText.trim();
         processSuggestedQuery(queryId, questionText);
     });
-}); 
+});
