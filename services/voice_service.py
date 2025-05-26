@@ -76,7 +76,7 @@ class VoiceService:
             model_id = model or self.default_model
 
 
-            text = "....... " + text
+            text = ".. " + text
 
             # Giới hạn độ dài văn bản để tránh lỗi
             if len(text) > 5000:
