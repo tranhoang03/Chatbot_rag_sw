@@ -14,7 +14,7 @@ class ToolManager:
                             Công cụ này phù hợp với các câu hỏi cần số liệu cụ thể, danh sách, tổng, trung bình,
                             đếm số lượng, so sánh, sắp xếp, lọc hoặc thống kê dựa trên dữ liệu trong bảng.
                             Ví dụ: "Tính tổng doanh thu tháng 5", "Liệt kê 3 sản phẩm bán chạy nhất",
-                            "Có bao nhiêu đơn hàng", "Sản phẩm nào giá dưới 50k", "So sánh doanh số".
+                            "Có bao nhiêu sản phẩm", "Sản phẩm nào giá dưới 50k", "So sánh doanh số".
                             KHÔNG sử dụng công cụ này cho các câu hỏi chung, mô tả, hay ý kiến.""",
             "parameters": {
                 "type": "object",
