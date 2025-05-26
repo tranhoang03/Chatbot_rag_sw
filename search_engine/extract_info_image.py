@@ -14,9 +14,6 @@ load_dotenv()
 
 # ----------------- Khai báo schema thông tin đồ uống ----------------- #
 class ExtractedDrinkInfo(BaseModel):
-    drink_type: Optional[str] = Field(
-        default=None, description="Loại đồ uống (Ví dụ: Coffee, Trà, Capuchino,...)"
-    )
     drink_color: Optional[str] = Field(
         default=None, description="Màu sắc của đồ uống "
     )
@@ -56,14 +53,13 @@ class LLMExtract:
                 content=(
                     "Bạn là một trợ lý thông minh, chuyên trích xuất thông tin có cấu trúc từ ảnh đồ uống.\n\n"
                     "Nhiệm vụ của bạn là phân tích kỹ ảnh đồ uống tôi cung cấp và trích xuất các thông tin sau:\n"
-                    "1. **drink_type**: Tên loại đồ uống – viết bằng **tiếng Anh và tiếng Việt**\n"
-                    "2. **drink_color**: Màu sắc của đồ uống(mô tả chi tiết màu sắc)\n"
-                    "3. **container_type**: Hình dáng và kiểu dáng của cốc hoặc ly(Ví dụ: cốc nhựa, cốc thủy tinh,...)\n"
-                    "4. **ingredients**: Thành phần chính(Ví dụ: sữa, đường, trân châu, đá,...)\n"
-                    "5. **topping**: Lớp phủ nếu có(Ví dụ: kem béo, trân châu, thạch,...). Nếu KHÔNG có lớp phủ trả về **None**.\n"
-                    "6. **suitable_for**: Đối tượng hoặc hoàn cảnh thưởng thức lý tưởng\n\n"
+                    "1. **drink_color**: Màu sắc của đồ uống(mô tả chi tiết màu sắc)\n"
+                    "2. **container_type**: Hình dáng và kiểu dáng của cốc hoặc ly(Ví dụ: cốc nhựa, cốc thủy tinh,...)\n"
+                    "3. **ingredients**: Thành phần chính(Ví dụ: sữa, đường, trân châu, đá,...)\n"
+                    "4. **topping**: Lớp phủ nếu có(Ví dụ: kem béo, trân châu, thạch,...). Nếu KHÔNG có lớp phủ trả về **None**.\n"
+                    "5. **suitable_for**: Đối tượng hoặc hoàn cảnh thưởng thức lý tưởng\n\n"
                     "👉 Yêu cầu:\n"
-                    "- Tất cả thông tin phải được viết bằng **tiếng Việt**, ngoại trừ `drink_type` là tiếng Anh kèm tiếng Việt.\n"
+                    "- Tất cả thông tin phải được viết bằng **tiếng Việt**\n"
                     "- Nếu không có thông tin, hãy ghi rõ `không có topping`.\n"
                     "- Trả lời đúng theo định dạng JSON sau:\n"
                     f"{parser.get_format_instructions()}\n"
