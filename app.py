@@ -57,7 +57,7 @@ def decode_image_from_base64(base64_string):
 # --- Routes ---
 @app.route('/')
 def index():
-    """Serves the main page. Shows auth page if not logged in, chat page otherwise."""
+    """Serves the main page. Shows auth page if not logged in, chat page otherwise."""  
 
     # Kiểm tra session và tự động thiết lập anonymous nếu cần
     if not session.get('authenticated', False) and not session.get('anonymous', False):
