@@ -146,7 +146,7 @@ class OptimizedRAGSystem:
                     "order": "Lưu thông tin đơn hàng của khách hàng",
                     "product": "Chứa thông tin về tên, mô tả về thành phần, màu sắc đồ uống,... và hình ảnh của các sản phẩm đang bán",
                     "variant": "Chứa thông tin chi tiết về từng biến thể của một sản phẩm đồ uống như kích cỡ, hàm lượng dinh dường, giá, hạng bán ra.",
-                    "categories": "Lưu danh sách các danh mục phân loại sản phẩm đồ uống. Mỗi danh mục tương ứng với một nhóm sản phẩm cùng loại (ví dụ: cà phê, trà, nước ép).",
+                    "categories": "Lưu danh sách các danh mục phân loại sản phẩm đồ uống. Mỗi danh mục tương ứng với một nhóm sản phẩm cùng loại (ví dụ: cà phê, trà, nước ép). Các sản phẩm thuộc danh mục lưu ở bảng productproduct",
             }
 
             cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
