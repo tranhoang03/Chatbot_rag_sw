@@ -19,16 +19,16 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 def get_product_image_sources(db_path: str) -> list:
-    """Truy vấn database để lấy danh sách (ID, Link_Image) từ bảng Product."""
+    """Truy vấn database để lấy danh sách (ID, Link_Image, Name_Product) từ bảng Product."""
     sources = []
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        # Lấy ID và Link_Image, bỏ qua những hàng có Link_Image là NULL hoặc trống
-        cursor.execute("SELECT ID, Link_Image FROM Product WHERE Link_Image IS NOT NULL AND Link_Image != ''")
+        # Lấy ID, Link_Image và Name_Product, bỏ qua những hàng có Link_Image là NULL hoặc trống
+        cursor.execute("SELECT ID, Link_Image, Name_Product FROM Product WHERE Link_Image IS NOT NULL AND Link_Image != ''")
         rows = cursor.fetchall()
         conn.close()
-        sources = [(row[0], row[1]) for row in rows] # Lưu cả ID và Link
+        sources = [(row[0], row[1], row[2]) for row in rows] # Lưu ID, Link và Name
         logger.info(f"Tìm thấy {len(sources)} sản phẩm có Link_Image trong database.")
     except sqlite3.Error as e:
         logger.error(f"Lỗi khi truy vấn database {db_path}: {e}")
@@ -46,9 +46,10 @@ def main(config: Config):
         logger.warning("Không tìm thấy nguồn ảnh nào từ database. Kết thúc.")
         return
 
-    # Tách ID và URL/Path
+    # Tách ID, URL/Path và Name
     product_ids = [item[0] for item in image_sources_with_ids]
     image_sources = [item[1] for item in image_sources_with_ids]
+    product_names = [item[2] for item in image_sources_with_ids]
 
     # 2. Khởi tạo Trình trích xuất Đặc trưng
     try:
@@ -62,7 +63,7 @@ def main(config: Config):
     try:
         # Sử dụng batch_size lớn hơn nếu có GPU mạnh
         batch_size = config.image_batch_size # Lấy từ config
-        
+
         all_features_list, successful_sources = feature_extractor.extract_features_batch(image_sources, batch_size=batch_size)
 
         if not all_features_list:
@@ -73,15 +74,17 @@ def main(config: Config):
         all_features_np = np.array(all_features_list).astype(np.float32)
 
         # Tạo metadata tương ứng với các vector đã trích xuất thành công
-        # Tìm ID sản phẩm cho các nguồn ảnh thành công
-        source_to_id_map = {source: pid for pid, source in image_sources_with_ids}
+        # Tìm ID và tên sản phẩm cho các nguồn ảnh thành công
+        source_to_info_map = {source: (pid, pname) for pid, source, pname in image_sources_with_ids}
         metadata_list = []
         valid_indices = [] # Lưu index của các vector hợp lệ trong mảng all_features_np
         for i, source in enumerate(successful_sources):
-            product_id = source_to_id_map.get(source)
-            if product_id is not None:
+            product_info = source_to_info_map.get(source)
+            if product_info is not None:
+                product_id, product_name = product_info
                 metadata_list.append({
                     'product_id': product_id, # Lưu ID sản phẩm
+                    'product_name': product_name, # Lưu tên sản phẩm
                     'image_source': source
                 })
                 valid_indices.append(i)
