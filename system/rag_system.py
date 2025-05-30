@@ -156,11 +156,9 @@ class OptimizedRAGSystem:
             for table in tables:
                 table_name = table[0]
 
-                # Bỏ qua bảng customers
                 if table_name.lower() in ["customers"]:
                     continue
 
-                # Lấy thông tin schema
                 cursor.execute(f"PRAGMA table_info({table_name})")
                 columns = cursor.fetchall()
 
@@ -170,7 +168,6 @@ class OptimizedRAGSystem:
                 cursor.execute(f"PRAGMA index_list({table_name})")
                 indexes = cursor.fetchall()
 
-                # Format column information
                 column_info = []
                 for col in columns:
                     col_name = col[1]
@@ -179,7 +176,6 @@ class OptimizedRAGSystem:
                     pk_info = " (PRIMARY KEY)" if is_pk else ""
                     column_info.append(f"{col_name} ({col_type}){pk_info}")
 
-                # Format foreign key information
                 fk_info = []
                 for fk in foreign_keys:
                     ref_table = fk[2]
@@ -187,7 +183,6 @@ class OptimizedRAGSystem:
                     to_col = fk[4]
                     fk_info.append(f"FOREIGN KEY ({from_col}) REFERENCES {ref_table}({to_col})")
 
-                # Format index information
                 index_info = []
                 for idx in indexes:
                     idx_name = idx[1]
@@ -195,7 +190,6 @@ class OptimizedRAGSystem:
                     if not idx_name.startswith('sqlite_autoindex'):
                         index_info.append(f"{'UNIQUE ' if is_unique else ''}INDEX {idx_name}")
 
-                # Mô tả bảng (nếu có)
                 description = table_descriptions.get(table_name.lower(), "Không có mô tả.")
                 table_info = [f"Bảng {table_name}: {description}"]
                 table_info.extend(column_info)
@@ -245,7 +239,6 @@ class OptimizedRAGSystem:
                 print(f"Content: {doc.page_content}")
                 print(f"Score: {score}")
 
-            # Nếu là tìm kiếm ảnh, thêm tìm kiếm dựa trên đặc trưng ảnh
             if is_image_upload and image_path:
                 print("\n=== Tìm kiếm dựa trên đặc trưng ảnh ===")
                 # Khởi tạo hybrid search
@@ -400,7 +393,7 @@ class OptimizedRAGSystem:
 
 
     def answer_query(self, user_key: str, query: str) -> str:
-        """Process query and return answer using function calling"""
+        """Process query and return answer using LangChain tool calling"""
         try:
             print(f"Processing query: {query} for user: {user_key}")
 
@@ -409,23 +402,23 @@ class OptimizedRAGSystem:
             recent_history_str = self.chat_history.get_latest_chat(user_key)
             purchase_history = get_purchase_history(user_key)
 
-            prompt = self.tool_manager.create_tool_selection_prompt(
-                user_info=user_info,
+            # Create context prompt for tool selection
+            context_prompt = self.tool_manager.create_tool_selection_prompt(
                 recent_history_str=recent_history_str,
                 query=query,
                 data_schema=data_schema
             )
 
-            messages = self.tool_manager.create_tool_selection_messages(prompt)
+            llm_with_tools = self.llm.bind_tools(self.tool_manager.get_tools())
 
-            print("Invoking LLM for tool selection...")
-            response = self.llm.invoke(messages, tools=self.tool_manager.get_tools())
+            print("Invoking LLM with tool calling...")
+            response = llm_with_tools.invoke(context_prompt)
             print(f"LLM Response: {response}")
 
-            final_response = ""
+            tool_name = self.tool_manager.process_tool_response(response)
+            print(f"Selected tool: {tool_name}")
 
-            tool_name, args = self.tool_manager.process_tool_response(response)
-            print(f"Tool name: {tool_name}, Args: {args}")
+            final_response = ""
 
             if tool_name == "use_sql_tool":
                 final_response = self._answer_with_sql(user_key, query, user_info, purchase_history)
@@ -433,8 +426,10 @@ class OptimizedRAGSystem:
                 is_image_upload = False
                 final_response = self._answer_with_vector(user_key, query, user_info, purchase_history, is_image_upload)
             else:
-                final_response = "Xin lỗi, tôi không hiểu yêu cầu này hoặc công cụ được gọi không hợp lệ."
-                print(f"Unknown tool name: '{tool_name}'")
+                # Fallback to vector tool if no tool is selected
+                print(f"No tool selected or unknown tool: '{tool_name}', falling back to vector tool")
+                is_image_upload = False
+                final_response = self._answer_with_vector(user_key, query, user_info, purchase_history, is_image_upload)
 
             self.chat_history.add_chat(user_key, query, final_response)
             return final_response
