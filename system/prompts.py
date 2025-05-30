@@ -4,7 +4,7 @@ class PromptManager:
     @staticmethod
     def get_sql_generation_prompt(query: str, schema_info: str, history: str = "") -> str:
         return f"""
-        Bạn là trợ lý thông minh chuyên chuyển đổi ngôn ngữ tự nhiên thành truy vấn SQL đúng cú pháp trên SQLite.
+        Bạn là trợ lý thông minh chuyên phân tích ngữ cảnh trò chuyện dựa trên lịch sử trò chuyện và câu hỏi của khách hàng, từ đó chuyển đổi thành truy vấn SQL đúng cú pháp trên SQLite.
 
         **CÂU HỎI KHÁCH HÀNG**: "{query}"
          **SCHEMA **: {schema_info}
