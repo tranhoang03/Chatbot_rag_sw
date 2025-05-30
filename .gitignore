@@ -34,7 +34,7 @@ buffalo_l/
 *.swp
 *.swo
 *.zip
-
+*.json
 # Logs
 *.log
 *.onnx
