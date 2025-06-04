@@ -151,7 +151,7 @@ class FaceAuthTransformer:
 
 
 
-def find_matching_face(embedding, threshold=0.4):
+def find_matching_face(embedding, threshold=0.2):
     conn = None
     best_match_info = None
     max_similarity = -1.0
